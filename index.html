@@ -55,9 +55,9 @@ td.selected{box-shadow:inset 0 0 0 2px var(--excel);background:#eef8f1} td.task-
 <body>
 <div class="app">
   <div class="hero">
-    <div class="mini-top">1 odkaz pro žáky • skrytý admin režim</div>
+    <div class="mini-top">1 odkaz pro žáky • admin tlačítko pro učitele</div>
     <h1 id="logoTrigger">EduTab OneLink</h1>
-    <div class="sub">Jedna HTML aplikace pro žáky i učitele. Žák vidí jen jednoduché ovládání tabulky. Učitel může skrytě otevřít admin režim, vytvořit zadání, vygenerovat sdílecí odkaz a nastavit odesílání výsledků do Google Sheets přes Google Apps Script.</div>
+    <div class="sub">Jedna HTML aplikace pro žáky i učitele. Žák vidí jen jednoduché ovládání tabulky. Učitel má teď navíc zřetelné tlačítko „Admin / Nastavení učitele“, přes které spolehlivě otevře správu zadání, sdílecí odkaz i nastavení odesílání výsledků do Google Sheets přes Google Apps Script.</div>
   </div>
 
   <div id="adminBar" class="admin-bar hidden">
@@ -69,6 +69,7 @@ td.selected{box-shadow:inset 0 0 0 2px var(--excel);background:#eef8f1} td.task-
   </div>
 
   <div class="toolbar">
+    <button class="danger" id="openAdminBtn">Admin / Nastavení učitele</button>
     <button class="primary" id="loadAssignmentBtn">Načíst zadání</button>
     <button id="startSchoolMode">Spustit školní režim</button>
     <button id="checkNow">Zkontrolovat teď</button>
@@ -163,7 +164,7 @@ td.selected{box-shadow:inset 0 0 0 2px var(--excel);background:#eef8f1} td.task-
           </div>
           <div class="mini">
             <b>5. Skrytí adminu</b>
-            <div class="small">Admin otevřeš kliknutím <b>7× na logo</b> nebo klávesami <span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">A</span>. Pro zamknutí použij tlačítko <b>Zamknout admin</b>.</div>
+            <div class="small">Admin otevřeš hlavně přes tlačítko <b>Admin / Nastavení učitele</b>. Záložně stále funguje i kliknutí <b>7× na logo</b> nebo klávesy <span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">A</span>. Pro zamknutí použij tlačítko <b>Zamknout admin</b>.</div>
           </div>
         </div>
       </div>
@@ -550,6 +551,7 @@ $('loadWork').onclick = ()=>{ const raw=localStorage.getItem(LOCAL_KEY); if(raw)
 $('workFile').addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>restorePayload(JSON.parse(t))); e.target.value=''; });
 $('exportResult').onclick = exportResult;
 $('sendToSheetsBtn').onclick = sendToSheets;
+$('openAdminBtn').onclick = ()=>$('#adminModal').classList.add('show');
 $('toggleAdminPanel').onclick = ()=>setAdminVisible($('#adminPanel').classList.contains('hidden'));
 $('lockAdmin').onclick = lockAdmin;
 $('logoTrigger').onclick = ()=>{ logoClicks++; if(logoClicks>=7){ logoClicks=0; $('#adminModal').classList.add('show'); } setTimeout(()=>{ logoClicks=0; }, 1400); };
