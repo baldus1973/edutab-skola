@@ -61,7 +61,7 @@ td.selected{box-shadow:inset 0 0 0 2px var(--excel);background:#eef8f1} td.task-
   </div>
 
   <div id="adminBar" class="admin-bar hidden">
-    <div><b>Admin režim aktivní.</b> Navenek zůstává jeden odkaz, ale učitel má navíc tvorbu zadání, sdílecí link a nastavení Google Sheets.</div>
+    <div><b>Admin režim aktivní.</b> Panel je otevřený spolehlivě přes viditelné tlačítko. Když chceš, můžeš ho zase skrýt nebo zamknout.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button id="toggleAdminPanel" class="secondary">Zobrazit / skrýt admin panel</button>
       <button id="lockAdmin" class="danger">Zamknout admin</button>
@@ -203,6 +203,7 @@ td.selected{box-shadow:inset 0 0 0 2px var(--excel);background:#eef8f1} td.task-
           <div class="mini"><b>Splněno:</b> <span id="progressText">0 / 0</span></div>
           <div class="mini"><b>Čas práce:</b> <span id="timeBox">00:00</span></div>
           <div class="mini"><b>Poslední hodnocení:</b> <span id="evalBox">Zatím bez kontroly.</span></div>
+          <div class="mini" id="submissionReceipt">Potvrzení o odevzdání se zobrazí zde.</div>
         </div>
       </div>
 
@@ -513,9 +514,9 @@ async function sendToSheets(){
 function loadAssignmentFile(file){ file.text().then(text=>{ const ass=JSON.parse(text); applyAssignment(ass, ass.meta?.difficulty ? buildPreset(ass.meta.difficulty) : null); }).catch(()=>alert('Soubor zadání se nepodařilo načíst.')); }
 function initDefaults(){ workbook={ values:{A1:'Jméno sloupce',B1:'Hodnota',A2:'Ukázka',B2:'1'}, styles:{} }; const preset=buildPreset('medium'); $('#adminTasks').value=taskLinesFromTasks(preset.tasks); render(); updateSchoolPanel(); }
 function setAdminVisible(visible){ adminPanelShown=visible; $('#adminPanel').classList.toggle('hidden', !visible); }
-function unlockAdmin(){ adminUnlocked=true; $('#adminBar').classList.remove('hidden'); setAdminVisible(true); }
-function lockAdmin(){ adminUnlocked=false; $('#adminBar').classList.add('hidden'); setAdminVisible(false); $('#adminModal').classList.remove('show'); $('#adminPinInput').value=''; }
-function tryOpenAdmin(){ const pin = $('#adminPinInput').value.trim(); const expected = $('#adminPin').value.trim() || '2468'; if(pin===expected){ unlockAdmin(); $('#adminModal').classList.remove('show'); $('#adminPinInput').value=''; } else alert('PIN není správný.'); }
+function unlockAdmin(){ adminUnlocked=true; $('#adminBar').classList.remove('hidden'); setAdminVisible(true); $('#evalBox').textContent='Admin režim je otevřený.'; }
+function lockAdmin(){ adminUnlocked=false; $('#adminBar').classList.add('hidden'); setAdminVisible(false); $('#adminModal').classList.remove('show'); $('#adminPinInput').value=''; $('#evalBox').textContent='Admin režim byl zamknutý.'; }
+function tryOpenAdmin(){ const pin = $('#adminPinInput').value.trim(); const expected = $('#adminPin').value.trim() || '2468'; if(pin===expected){ unlockAdmin(); $('#adminModal').classList.remove('show'); $('#adminPinInput').value=''; } else alert('PIN není správný. Zkus výchozí PIN 2468, pokud jsi ho neměnil.'); }
 function decodeAssignmentFromHash(){
   if(!location.hash.startsWith('#assignment=')) return false;
   try{
@@ -551,7 +552,7 @@ $('loadWork').onclick = ()=>{ const raw=localStorage.getItem(LOCAL_KEY); if(raw)
 $('workFile').addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>restorePayload(JSON.parse(t))); e.target.value=''; });
 $('exportResult').onclick = exportResult;
 $('sendToSheetsBtn').onclick = sendToSheets;
-$('openAdminBtn').onclick = ()=>$('#adminModal').classList.add('show');
+$('openAdminBtn').onclick = ()=>{ if(adminUnlocked){ setAdminVisible($('#adminPanel').classList.contains('hidden')); } else { unlockAdmin(); } };
 $('toggleAdminPanel').onclick = ()=>setAdminVisible($('#adminPanel').classList.contains('hidden'));
 $('lockAdmin').onclick = lockAdmin;
 $('logoTrigger').onclick = ()=>{ logoClicks++; if(logoClicks>=7){ logoClicks=0; $('#adminModal').classList.add('show'); } setTimeout(()=>{ logoClicks=0; }, 1400); };
