@@ -3,714 +3,1067 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduTab OneLink – žák + admin</title>
+  <title>EduTab – verze se zadáními</title>
   <style>
     :root{
+      --bg:#f3f4f6;
+      --panel:#ffffff;
+      --text:#1f2937;
+      --line:#d1d5db;
       --green:#166534;
       --green2:#15803d;
       --blue:#2563eb;
       --red:#dc2626;
-      --gray:#e5e7eb;
-      --text:#1f2937;
-      --bg:#f3f4f6;
-      --panel:#ffffff;
+      --amber:#d97706;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-    }
-    .wrap{
-      max-width:1400px;
-      margin:0 auto;
-      padding:18px;
-    }
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1440px;margin:0 auto;padding:16px}
     .hero{
       background:linear-gradient(180deg,var(--green),var(--green2));
-      color:#fff;
-      border-radius:18px;
-      padding:22px 20px;
-      margin-bottom:14px;
-      box-shadow:0 10px 24px rgba(0,0,0,.08);
+      color:#fff;border-radius:20px;padding:22px;margin-bottom:14px;
+      box-shadow:0 10px 24px rgba(0,0,0,.08)
     }
-    .hero h1{
-      margin:0 0 10px 0;
-      font-size:28px;
-    }
-    .hero p{
-      margin:0;
-      font-size:16px;
-      line-height:1.45;
-      max-width:1100px;
-    }
-
-    .toolbar, .formatbar{
-      background:var(--panel);
-      border:1px solid #d1d5db;
-      border-radius:18px;
-      padding:10px;
-      margin-bottom:12px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-    }
-    button{
-      border:none;
-      border-radius:14px;
-      padding:12px 16px;
-      font-size:15px;
-      cursor:pointer;
-      transition:.15s;
-    }
+    .hero h1{margin:0 0 10px;font-size:28px}
+    .hero p{margin:0;line-height:1.5}
+    .bar,.panel,.sheetWrap,.formulaBar{background:var(--panel);border:1px solid var(--line);border-radius:18px}
+    .bar{display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-bottom:12px;align-items:center}
+    .panel{padding:14px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+    h2,h3{margin:0 0 12px}
+    button{border:none;border-radius:14px;padding:11px 15px;font-size:15px;cursor:pointer}
     button:hover{transform:translateY(-1px)}
-    .btn-red{background:var(--red); color:#fff;}
-    .btn-green{background:#15803d; color:#fff;}
-    .btn-blue{background:var(--blue); color:#fff;}
-    .btn-gray{background:#f3f4f6; color:#111827; border:1px solid #d1d5db;}
-    .btn-small{
-      padding:10px 14px;
-      min-width:40px;
-      font-weight:bold;
-    }
-
-    .grid2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:12px;
-    }
-    .panel{
-      background:var(--panel);
-      border:1px solid #d1d5db;
-      border-radius:18px;
-      padding:14px;
-      min-height:220px;
-    }
-    .panel h3{
-      margin:0 0 14px 0;
-      font-size:18px;
-    }
-    .row2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    input[type="text"], input[type="password"], textarea, select{
-      width:100%;
-      border:1px solid #cbd5e1;
-      border-radius:12px;
-      padding:12px 14px;
-      font-size:16px;
-      background:#fff;
-    }
-    textarea{resize:vertical; min-height:90px}
-    .infoBox{
-      border:1px solid #d1d5db;
-      border-radius:14px;
-      padding:12px;
-      margin-bottom:10px;
-      background:#fafafa;
-      line-height:1.5;
-    }
-
-    .formulaBar{
-      background:var(--panel);
-      border:1px solid #d1d5db;
-      border-radius:18px;
-      padding:10px;
-      margin-bottom:12px;
-      display:grid;
-      grid-template-columns:100px 1fr 140px;
-      gap:10px;
-      align-items:center;
-    }
-    .cellLabel{
-      border:1px solid #cbd5e1;
-      border-radius:12px;
-      padding:12px;
-      text-align:center;
-      background:#fff;
-      font-weight:bold;
-      font-size:16px;
-    }
-
-    .sheetWrap{
-      background:var(--panel);
-      border:1px solid #d1d5db;
-      border-radius:18px;
-      padding:12px;
-      overflow:auto;
-    }
-    table.sheet{
-      border-collapse:collapse;
-      min-width:980px;
-      width:100%;
-      background:#fff;
-    }
-    table.sheet th,
-    table.sheet td{
-      border:1px solid #d1d5db;
-      min-width:90px;
-      height:34px;
-      padding:6px 8px;
-      position:relative;
-      vertical-align:middle;
-      user-select:none;
-    }
-    table.sheet th{
-      background:#f8fafc;
-      text-align:center;
-      font-weight:bold;
-    }
-    table.sheet td.active{
-      outline:3px solid #2563eb;
-      outline-offset:-3px;
-      background:#eff6ff;
-    }
-
-    .adminPanel{
-      display:none;
-      background:#fff7ed;
-      border:2px solid #f59e0b;
-      border-radius:18px;
-      padding:16px;
-      margin-bottom:12px;
-    }
-    .adminPanel.open{display:block}
-
-    .status{
-      margin-top:10px;
-      padding:12px 14px;
-      border-radius:12px;
-      background:#f8fafc;
-      border:1px solid #cbd5e1;
-      display:none;
-      white-space:pre-line;
-    }
-    .status.show{display:block}
-
+    .btn-green{background:#15803d;color:#fff}
+    .btn-blue{background:var(--blue);color:#fff}
+    .btn-red{background:var(--red);color:#fff}
+    .btn-gray{background:#f3f4f6;color:#111827;border:1px solid var(--line)}
+    .btn-amber{background:var(--amber);color:#fff}
+    .btn-small{padding:9px 12px;min-width:42px;font-weight:bold}
+    input[type="text"],input[type="password"],textarea,select{width:100%;padding:12px 14px;font-size:16px;border:1px solid #cbd5e1;border-radius:12px;background:#fff}
+    textarea{resize:vertical;min-height:88px}
+    label{display:block;font-size:14px;margin:0 0 6px;font-weight:bold}
     .muted{color:#6b7280}
-    .strong{font-weight:bold}
-
-    @media (max-width: 960px){
-      .grid2{grid-template-columns:1fr}
+    .infoBox{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fafafa;line-height:1.45;margin-bottom:10px}
+    .admin{display:none;background:#fff7ed;border:2px solid #f59e0b;border-radius:18px;padding:14px;margin-bottom:12px}
+    .admin.open{display:block}
+    .formulaBar{padding:10px;display:grid;grid-template-columns:96px 1fr 130px;gap:10px;align-items:center;margin-bottom:12px}
+    .cellBadge{border:1px solid #cbd5e1;border-radius:12px;background:#fff;padding:12px;text-align:center;font-weight:bold}
+    .sheetWrap{padding:12px;overflow:auto}
+    table.sheet{border-collapse:collapse;min-width:980px;width:100%;background:#fff}
+    table.sheet th,table.sheet td{border:1px solid var(--line);min-width:90px;height:36px;padding:6px 8px;vertical-align:middle}
+    table.sheet th{background:#f8fafc;text-align:center}
+    table.sheet td.active{outline:3px solid var(--blue);outline-offset:-3px;background:#eff6ff}
+    .status{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;white-space:pre-line}
+    .status.show{display:block}
+    .status.ok{background:#f0fdf4;border:1px solid #86efac}
+    .status.err{background:#fef2f2;border:1px solid #fca5a5}
+    .qrBox{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    .qrBox img{width:180px;height:180px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px}
+    .scoreGood{background:#dcfce7}
+    .scoreMid{background:#fef3c7}
+    .scoreLow{background:#fee2e2}
+    .resultsTable{width:100%;border-collapse:collapse}
+    .resultsTable th,.resultsTable td{border:1px solid var(--line);padding:8px;text-align:left}
+    .resultsTable th{background:#f8fafc}
+    .hidden{display:none}
+    @media (max-width:960px){
+      .grid2,.grid3,.row2,.row3{grid-template-columns:1fr}
       .formulaBar{grid-template-columns:1fr}
-      .row2{grid-template-columns:1fr}
+      .wrap{padding:10px}
+      .hero h1{font-size:24px}
+      button{width:100%}
+      .bar{align-items:stretch}
+      .bar > *{width:100%}
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <h1>EduTab OneLink</h1>
-      <p>
-        Jedna HTML aplikace pro žáky i učitele. Učitel otevře viditelné tlačítko
-        <strong>Admin / Nastavení učitele</strong>, nastaví zadání a propojení s Google Sheets.
-        Žák vyplní údaje, pracuje v jednoduché tabulce a odešle výsledek.
-      </p>
-    </div>
+<div class="wrap">
+  <div class="hero">
+    <h1>EduTab – verze se zadáními</h1>
+    <p>
+      Učitel může vytvářet vlastní zadání, ukládat je do JSON, znovu je načítat,
+      vygenerovat žákovský odkaz i QR kód a odesílat výsledky do Google Sheets.
+      Žákům se zobrazuje jen žákovská část. Admin je chráněný PINem.
+    </p>
+  </div>
 
-    <div class="toolbar">
-      <button class="btn-red" id="adminToggleBtn">Admin / Nastavení učitele</button>
-      <button class="btn-green" id="saveBtn">Uložit průběžně</button>
-      <button class="btn-gray" id="loadBtn">Obnovit práci</button>
-      <button class="btn-green" id="exportBtn">Export výsledku</button>
-      <button class="btn-blue" id="submitBtn">Odeslat výsledek do Google Sheets</button>
-    </div>
+  <div class="bar">
+    <button class="btn-red" id="adminBtn">Admin / Nastavení učitele</button>
+    <button class="btn-green" id="saveWorkBtn">Uložit průběžně</button>
+    <button class="btn-gray" id="loadWorkBtn">Obnovit práci</button>
+    <button class="btn-gray" id="exportResultBtn">Export výsledku</button>
+    <button class="btn-blue" id="evaluateBtn">Vyhodnotit teď</button>
+    <button class="btn-blue" id="submitBtn">Odeslat výsledek do Google Sheets</button>
+  </div>
 
-    <div class="adminPanel" id="adminPanel">
-      <h3>Admin / Nastavení učitele</h3>
+  <div class="admin" id="adminPanel">
+    <h2>Admin / Zadání</h2>
 
-      <div class="row2">
-        <div>
-          <label>Název zadání</label>
-          <input type="text" id="assignmentTitle" placeholder="Např. Formátování buněk – 6.A">
+    <div class="grid2">
+      <div class="panel">
+        <h3>Zabezpečení učitele</h3>
+        <div class="row2">
+          <div>
+            <label>PIN učitele</label>
+            <input type="password" id="teacherPin" placeholder="Např. 2468">
+          </div>
+          <div>
+            <label>Potvrzení PINu</label>
+            <input type="password" id="teacherPin2" placeholder="Zopakuj PIN">
+          </div>
         </div>
-        <div>
-          <label>Kód zadání</label>
-          <input type="text" id="assignmentCode" placeholder="Např. TAB-6A-01">
-        </div>
+        <button class="btn-green" id="savePinBtn">Uložit PIN</button>
       </div>
 
-      <div class="row2">
-        <div>
-          <label>Variantní kód</label>
-          <input type="text" id="variantCode" placeholder="Např. VAR-A">
+      <div class="panel">
+        <h3>Základ zadání</h3>
+        <div class="row2">
+          <div>
+            <label>Název zadání</label>
+            <input type="text" id="assignmentTitle" placeholder="Např. Formátování buněk 6.A">
+          </div>
+          <div>
+            <label>Kód zadání</label>
+            <input type="text" id="assignmentCode" placeholder="Např. TAB-6A-01">
+          </div>
         </div>
-        <div>
-          <label>Google Apps Script URL</label>
-          <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+        <div class="row2">
+          <div>
+            <label>Varianta</label>
+            <input type="text" id="variantCode" placeholder="Např. VAR-A">
+          </div>
+          <div>
+            <label>Google Apps Script URL</label>
+            <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+          </div>
         </div>
-      </div>
-
-      <div style="margin-bottom:10px;">
         <label>Instrukce pro žáka</label>
-        <textarea id="assignmentInstructions" placeholder="Např. Označ buňku C4, napiš text, nastav tučné písmo a ulož práci."></textarea>
-      </div>
-
-      <div class="toolbar" style="margin:8px 0 0 0; padding:0; border:none; background:transparent;">
-        <button class="btn-green" id="saveAdminBtn">Uložit nastavení učitele</button>
-        <button class="btn-gray" id="hideAdminBtn">Skrýt admin</button>
+        <textarea id="assignmentInstructions" placeholder="Např. Označ buňku C4, napiš Jaro, nastav tučné, na střed a žlutou výplň."></textarea>
       </div>
     </div>
 
     <div class="grid2">
       <div class="panel">
-        <h3>IDENTIFIKACE ŽÁKA</h3>
-        <div class="row2">
-          <input type="text" id="studentName" placeholder="Jméno a příjmení žáka">
-          <input type="text" id="studentClass" placeholder="Třída">
+        <h3>Pravidla hodnocení</h3>
+        <div class="row3">
+          <div>
+            <label>Cílová buňka</label>
+            <input type="text" id="ruleCell" placeholder="C4">
+          </div>
+          <div>
+            <label>Požadovaný text</label>
+            <input type="text" id="ruleText" placeholder="Jaro">
+          </div>
+          <div>
+            <label>Zarovnání</label>
+            <select id="ruleAlign">
+              <option value="">Neřešit</option>
+              <option value="left">Vlevo</option>
+              <option value="center">Na střed</option>
+              <option value="right">Vpravo</option>
+            </select>
+          </div>
         </div>
-        <div class="row2">
-          <input type="text" id="studentSchool" placeholder="Škola">
-          <input type="text" id="studentCode" placeholder="Kód zadání">
+        <div class="row3">
+          <div>
+            <label>Tučné</label>
+            <select id="ruleBold">
+              <option value="">Neřešit</option>
+              <option value="true">Ano</option>
+              <option value="false">Ne</option>
+            </select>
+          </div>
+          <div>
+            <label>Barva výplně</label>
+            <input type="color" id="ruleFill" value="#ffff00">
+          </div>
+          <div>
+            <label>Kontrolovat barvu výplně</label>
+            <select id="ruleCheckFill">
+              <option value="false">Ne</option>
+              <option value="true">Ano</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <div class="panel">
-        <h3>PROPOJENÍ A UKLÁDÁNÍ</h3>
-        <div class="infoBox"><span class="strong">Název zadání:</span> <span id="infoAssignmentTitle">zatím nenastaveno</span></div>
-        <div class="infoBox"><span class="strong">Variantní kód:</span> <span id="infoVariantCode">—</span></div>
-        <div class="infoBox"><span class="strong">Google Sheets:</span> <span id="infoSheets">nenastaveno</span></div>
-        <div class="infoBox"><span class="strong">Instrukce:</span><br><span id="infoInstructions" class="muted">zatím nejsou nastavené</span></div>
+        <h3>Práce se zadáními</h3>
+        <div class="bar" style="padding:0;border:none;background:transparent;margin:0 0 10px 0">
+          <button class="btn-green" id="saveAssignmentBtn">Uložit zadání do JSON</button>
+          <button class="btn-gray" id="loadAssignmentBtn">Načíst zadání z JSON</button>
+          <input type="file" id="assignmentFileInput" accept="application/json" class="hidden">
+        </div>
+        <div class="bar" style="padding:0;border:none;background:transparent;margin:0 0 10px 0">
+          <button class="btn-blue" id="generateLinkBtn">Vygenerovat žákovský odkaz + QR</button>
+          <button class="btn-gray" id="saveAdminSettingsBtn">Uložit nastavení učitele</button>
+        </div>
+        <div class="infoBox"><strong>Tip:</strong> Nejprve vyplň zadání, potom ho ulož do JSON. Tím si vytvoříš vlastní knihovnu úloh pro další roky nebo pro různé třídy.</div>
       </div>
     </div>
 
-    <div class="formatbar">
-      <button class="btn-small btn-gray" id="boldBtn">B</button>
-      <button class="btn-small btn-gray" id="italicBtn"><em>I</em></button>
-      <button class="btn-small btn-gray" id="underlineBtn"><u>U</u></button>
-      <button class="btn-gray" id="alignLeftBtn">← Vlevo</button>
-      <button class="btn-gray" id="alignCenterBtn">↔ Na střed</button>
-      <button class="btn-gray" id="alignRightBtn">→ Vpravo</button>
-      <label>Text</label>
-      <input type="color" id="textColor" value="#111111" style="width:60px;height:40px;border:none;background:transparent;">
-      <label>Výplň</label>
-      <input type="color" id="fillColor" value="#ffffff" style="width:60px;height:40px;border:none;background:transparent;">
-      <button class="btn-gray" id="clearCellBtn">Vymazat buňku</button>
-      <button class="btn-gray" id="clearFormatBtn">Smazat formát</button>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>AI generování zadání</h3>
+        <div class="infoBox"><strong>Důležité:</strong> Tato verze umí zadání generovat dvěma způsoby: <strong>1) lokální chytrý generátor</strong> bez API a <strong>2) přes AI endpoint</strong>, pokud si ho učitel nastaví přes Apps Script nebo jiný backend. API klíč nepatří do HTML stránky.</div>
+        <div class="row3">
+          <div>
+            <label>Téma</label>
+            <input type="text" id="aiTopic" placeholder="Např. formátování buněk, rozvrh, známky">
+          </div>
+          <div>
+            <label>Obtížnost</label>
+            <select id="aiDifficulty">
+              <option value="lehká">Lehká</option>
+              <option value="střední" selected>Střední</option>
+              <option value="těžší">Těžší</option>
+            </select>
+          </div>
+          <div>
+            <label>Ročník / třída</label>
+            <input type="text" id="aiGrade" placeholder="Např. 5. ročník nebo 7.A">
+          </div>
+        </div>
+        <div class="row3">
+          <div>
+            <label>Počet kroků</label>
+            <select id="aiSteps">
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div>
+            <label>AI endpoint URL (volitelné)</label>
+            <input type="text" id="aiEndpointUrl" placeholder="https://... pokud chceš skutečné AI volání">
+          </div>
+          <div>
+            <label>Preferovaný kontext</label>
+            <input type="text" id="aiContext" placeholder="Např. informatika, tabulky, školní administrace">
+          </div>
+        </div>
+        <div class="bar" style="padding:0;border:none;background:transparent;margin:8px 0 8px 0">
+          <button class="btn-amber" id="aiGenerateLocalBtn">AI návrh bez API</button>
+          <button class="btn-blue" id="aiGenerateRemoteBtn">Generovat přes AI endpoint</button>
+          <button class="btn-gray" id="aiBuildPromptBtn">Vytvořit prompt</button>
+          <button class="btn-gray" id="aiApplyJsonBtn">Použít vložený AI JSON</button>
+        </div>
+        <label>Prompt / AI JSON</label>
+        <textarea id="aiJsonBox" placeholder='Sem se vloží prompt nebo JSON odpověď. Očekávaný tvar: {"title":"...","code":"...","variant":"...","instructions":"...","rules":{"cell":"C4","text":"Jaro","align":"center","bold":"true","fill":"#ffff00","checkFill":"true"}}'></textarea>
+      </div>
+
+      <div class="panel">
+        <h3>Jak AI režim funguje</h3>
+        <div class="infoBox">Tlačítko <strong>AI návrh bez API</strong> vytvoří smysluplné zadání přímo v prohlížeči. Je vhodné pro rychlou přípravu hodin a funguje i bez internetu navíc.</div>
+        <div class="infoBox">Tlačítko <strong>Generovat přes AI endpoint</strong> odešle parametry na tebou zadaný backend a očekává JSON odpověď. To je správná cesta, pokud chceš skutečné AI generování přímo uvnitř adminu.</div>
+        <div class="infoBox">Tlačítko <strong>Vytvořit prompt</strong> ti připraví přesný prompt, který můžeš poslat do ChatGPT. Odpověď ve formátu JSON pak vložíš zpět přes <strong>Použít vložený AI JSON</strong>.</div>
+      </div>
     </div>
 
-    <div class="formulaBar">
-      <div class="cellLabel" id="selectedCellLabel">A1</div>
-      <input type="text" id="cellInput" placeholder="Napiš text do vybrané buňky">
-      <button class="btn-green" id="applyCellBtn">Použít</button>
+    <div class="panel">
+      <h3>Distribuce žákům</h3>
+      <div class="qrBox">
+        <div style="flex:1;min-width:280px;">
+          <label>Žákovský odkaz</label>
+          <textarea id="studentLink" placeholder="Po kliknutí na Vygenerovat žákovský odkaz + QR se sem vloží odkaz."></textarea>
+          <div class="bar" style="padding:0;border:none;background:transparent;margin:10px 0 0 0">
+            <button class="btn-gray" id="copyLinkBtn">Kopírovat odkaz</button>
+          </div>
+          <div class="infoBox">Žákovský odkaz neotevírá admin automaticky. Žák uvidí jen zadání a pracovní část.</div>
+        </div>
+        <div>
+          <img id="qrImage" alt="QR kód pro žákovský odkaz">
+        </div>
+      </div>
     </div>
-
-    <div class="sheetWrap">
-      <table class="sheet" id="sheetTable"></table>
-    </div>
-
-    <div class="status" id="statusBox"></div>
   </div>
 
-  <script>
-    const STORAGE_KEY = "edutab_onelink_state_v_final";
-    const ROWS = 12;
-    const COLS = 8;
-    const COL_NAMES = ["A","B","C","D","E","F","G","H"];
+  <div class="grid2">
+    <div class="panel">
+      <h3>Identifikace žáka</h3>
+      <div class="row2">
+        <div>
+          <label>Jméno a příjmení</label>
+          <input type="text" id="studentName" placeholder="Jméno a příjmení žáka">
+        </div>
+        <div>
+          <label>Třída</label>
+          <input type="text" id="studentClass" placeholder="Např. 6.A">
+        </div>
+      </div>
+      <div class="row2">
+        <div>
+          <label>Škola</label>
+          <input type="text" id="studentSchool" placeholder="Název školy">
+        </div>
+        <div>
+          <label>Kód zadání</label>
+          <input type="text" id="studentCode" placeholder="Převezme se ze zadání">
+        </div>
+      </div>
+    </div>
 
-    const state = {
-      admin: {
-        assignmentTitle: "",
-        assignmentCode: "",
-        variantCode: "",
-        scriptUrl: "",
-        instructions: ""
-      },
-      student: {
-        name: "",
-        className: "",
-        school: "",
-        code: ""
-      },
-      cells: {},
-      selected: "A1",
-      submittedCount: null
-    };
+    <div class="panel">
+      <h3>Aktuální zadání</h3>
+      <div class="infoBox"><strong>Název:</strong> <span id="infoTitle">zatím nenastaveno</span></div>
+      <div class="infoBox"><strong>Kód:</strong> <span id="infoCode">—</span></div>
+      <div class="infoBox"><strong>Varianta:</strong> <span id="infoVariant">—</span></div>
+      <div class="infoBox"><strong>Google Sheets:</strong> <span id="infoSheets">nenastaveno</span></div>
+      <div class="infoBox"><strong>Instrukce:</strong><br><span id="infoInstructions">zatím nejsou nastavené</span></div>
+    </div>
+  </div>
 
-    function el(id){ return document.getElementById(id); }
+  <div class="bar">
+    <button class="btn-small btn-gray" id="boldBtn">B</button>
+    <button class="btn-small btn-gray" id="italicBtn"><em>I</em></button>
+    <button class="btn-small btn-gray" id="underlineBtn"><u>U</u></button>
+    <button class="btn-gray" id="alignLeftBtn">← Vlevo</button>
+    <button class="btn-gray" id="alignCenterBtn">↔ Na střed</button>
+    <button class="btn-gray" id="alignRightBtn">→ Vpravo</button>
+    <label style="display:inline-block;margin:0 0 0 6px">Text</label>
+    <input type="color" id="textColor" value="#111111" style="width:60px;height:40px;border:none;background:transparent">
+    <label style="display:inline-block;margin:0 0 0 6px">Výplň</label>
+    <input type="color" id="fillColor" value="#ffffff" style="width:60px;height:40px;border:none;background:transparent">
+    <button class="btn-gray" id="clearCellBtn">Vymazat buňku</button>
+    <button class="btn-gray" id="clearFormatBtn">Smazat formát</button>
+  </div>
 
-    function cellKey(row, col){
-      return COL_NAMES[col] + (row + 1);
+  <div class="formulaBar">
+    <div class="cellBadge" id="selectedCellLabel">A1</div>
+    <input type="text" id="cellInput" placeholder="Napiš text do vybrané buňky">
+    <button class="btn-green" id="applyCellBtn">Použít</button>
+  </div>
+
+  <div class="sheetWrap">
+    <table class="sheet" id="sheetTable"></table>
+  </div>
+
+  <div class="grid2" style="margin-top:12px;">
+    <div class="panel">
+      <h3>Vyhodnocení</h3>
+      <div class="infoBox"><strong>Body:</strong> <span id="scoreText">zatím nevyhodnoceno</span></div>
+      <div class="infoBox"><strong>Slovní hodnocení:</strong> <span id="ratingText">—</span></div>
+      <div class="infoBox"><strong>Kontrola úkolu:</strong><br><span id="evaluationDetail">Po kliknutí na „Vyhodnotit teď" se zobrazí rozpad bodů.</span></div>
+    </div>
+    <div class="panel">
+      <h3>Lokální přehled výsledků</h3>
+      <div class="infoBox">Tento přehled je uložený v prohlížeči učitele. Trvalé ukládání celé třídy dál zajišťuje Google Sheets.</div>
+      <div style="overflow:auto;max-height:280px;">
+        <table class="resultsTable" id="resultsTable">
+          <thead>
+            <tr>
+              <th>Žák</th>
+              <th>Třída</th>
+              <th>Kód</th>
+              <th>Body</th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="statusBox"></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'edutab_assignments_v1';
+const RESULTS_KEY = 'edutab_assignments_results_v1';
+const ROWS = 12;
+const COLS = 8;
+const COLS_NAMES = ['A','B','C','D','E','F','G','H'];
+
+const state = {
+  adminUnlocked: false,
+  teacherPin: '',
+  assignment: {
+    title: '',
+    code: '',
+    variant: '',
+    instructions: '',
+    scriptUrl: '',
+    rules: {
+      cell: '',
+      text: '',
+      align: '',
+      bold: '',
+      fill: '#ffff00',
+      checkFill: 'false'
     }
+  },
+  student: {
+    name: '',
+    className: '',
+    school: '',
+    code: ''
+  },
+  selected: 'A1',
+  cells: {},
+  lastEvaluation: null,
+  results: []
+};
 
-    function defaultCell(){
-      return {
-        value: "",
-        bold: false,
-        italic: false,
-        underline: false,
-        align: "left",
-        textColor: "#111111",
-        fillColor: "#ffffff"
-      };
+function el(id){ return document.getElementById(id); }
+function showStatus(msg, error=false){
+  const box = el('statusBox');
+  box.textContent = msg;
+  box.className = 'status show ' + (error ? 'err' : 'ok');
+}
+function cellKey(r,c){ return COLS_NAMES[c] + (r+1); }
+function defaultCell(){
+  return { value:'', bold:false, italic:false, underline:false, align:'left', textColor:'#111111', fillColor:'#ffffff' };
+}
+function getCellState(key){
+  if(!state.cells[key]) state.cells[key] = defaultCell();
+  return state.cells[key];
+}
+function normalizeHex(v){ return (v || '').toLowerCase(); }
+
+function saveAll(){
+  readStudentInputs();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    teacherPin: state.teacherPin,
+    assignment: state.assignment,
+    student: state.student,
+    selected: state.selected,
+    cells: state.cells,
+    lastEvaluation: state.lastEvaluation,
+    aiPrefs: {
+      topic: el('aiTopic') ? el('aiTopic').value : '',
+      difficulty: el('aiDifficulty') ? el('aiDifficulty').value : 'střední',
+      grade: el('aiGrade') ? el('aiGrade').value : '',
+      steps: el('aiSteps') ? el('aiSteps').value : '4',
+      endpoint: el('aiEndpointUrl') ? el('aiEndpointUrl').value : '',
+      context: el('aiContext') ? el('aiContext').value : '',
+      jsonBox: el('aiJsonBox') ? el('aiJsonBox').value : ''
     }
+  }));
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(state.results));
+}
 
-    function getCellState(key){
-      if(!state.cells[key]) state.cells[key] = defaultCell();
-      return state.cells[key];
-    }
-
-    function showStatus(message, isError = false){
-      const box = el("statusBox");
-      box.textContent = message;
-      box.classList.add("show");
-      box.style.background = isError ? "#fef2f2" : "#f0fdf4";
-      box.style.borderColor = isError ? "#fca5a5" : "#86efac";
-    }
-
-    function refreshInfo(){
-      el("infoAssignmentTitle").textContent = state.admin.assignmentTitle || "zatím nenastaveno";
-      el("infoVariantCode").textContent = state.admin.variantCode || "—";
-      el("infoSheets").textContent = state.admin.scriptUrl ? "nastaveno" : "nenastaveno";
-      el("infoInstructions").textContent = state.admin.instructions || "zatím nejsou nastavené";
-    }
-
-    function renderTable(){
-      const table = el("sheetTable");
-      table.innerHTML = "";
-
-      const thead = document.createElement("thead");
-      const hr = document.createElement("tr");
-      const empty = document.createElement("th");
-      empty.textContent = "";
-      hr.appendChild(empty);
-
-      for(let c=0;c<COLS;c++){
-        const th = document.createElement("th");
-        th.textContent = COL_NAMES[c];
-        hr.appendChild(th);
+function loadAll(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const rawResults = localStorage.getItem(RESULTS_KEY);
+  if(raw){
+    try{
+      const data = JSON.parse(raw);
+      if(data.teacherPin) state.teacherPin = data.teacherPin;
+      if(data.assignment) state.assignment = data.assignment;
+      if(data.student) state.student = data.student;
+      if(data.selected) state.selected = data.selected;
+      if(data.cells) state.cells = data.cells;
+      if(data.lastEvaluation) state.lastEvaluation = data.lastEvaluation;
+      if(data.aiPrefs){
+        state.aiPrefs = data.aiPrefs;
       }
-      thead.appendChild(hr);
-      table.appendChild(thead);
+    }catch(e){ console.error(e); }
+  }
+  if(rawResults){
+    try{ state.results = JSON.parse(rawResults) || []; }catch(e){ console.error(e); }
+  }
+}
 
-      const tbody = document.createElement("tbody");
+function fillInputsFromState(){
+  el('assignmentTitle').value = state.assignment.title || '';
+  el('assignmentCode').value = state.assignment.code || '';
+  el('variantCode').value = state.assignment.variant || '';
+  el('assignmentInstructions').value = state.assignment.instructions || '';
+  el('scriptUrl').value = state.assignment.scriptUrl || '';
+  el('ruleCell').value = state.assignment.rules.cell || '';
+  el('ruleText').value = state.assignment.rules.text || '';
+  el('ruleAlign').value = state.assignment.rules.align || '';
+  el('ruleBold').value = state.assignment.rules.bold || '';
+  el('ruleFill').value = state.assignment.rules.fill || '#ffff00';
+  el('ruleCheckFill').value = state.assignment.rules.checkFill || 'false';
 
-      for(let r=0;r<ROWS;r++){
-        const tr = document.createElement("tr");
-        const rowTh = document.createElement("th");
-        rowTh.textContent = String(r+1);
-        tr.appendChild(rowTh);
+  el('studentName').value = state.student.name || '';
+  el('studentClass').value = state.student.className || '';
+  el('studentSchool').value = state.student.school || '';
+  el('studentCode').value = state.student.code || state.assignment.code || '';
+  if(state.aiPrefs){
+    if(el('aiTopic')) el('aiTopic').value = state.aiPrefs.topic || '';
+    if(el('aiDifficulty')) el('aiDifficulty').value = state.aiPrefs.difficulty || 'střední';
+    if(el('aiGrade')) el('aiGrade').value = state.aiPrefs.grade || '';
+    if(el('aiSteps')) el('aiSteps').value = state.aiPrefs.steps || '4';
+    if(el('aiEndpointUrl')) el('aiEndpointUrl').value = state.aiPrefs.endpoint || '';
+    if(el('aiContext')) el('aiContext').value = state.aiPrefs.context || '';
+    if(el('aiJsonBox')) el('aiJsonBox').value = state.aiPrefs.jsonBox || '';
+  }
+}
 
-        for(let c=0;c<COLS;c++){
-          const key = cellKey(r,c);
-          const cell = getCellState(key);
-          const td = document.createElement("td");
-          td.dataset.key = key;
-          td.textContent = cell.value;
+function readStudentInputs(){
+  state.student.name = el('studentName').value.trim();
+  state.student.className = el('studentClass').value.trim();
+  state.student.school = el('studentSchool').value.trim();
+  state.student.code = el('studentCode').value.trim();
+}
 
-          td.style.fontWeight = cell.bold ? "bold" : "normal";
-          td.style.fontStyle = cell.italic ? "italic" : "normal";
-          td.style.textDecoration = cell.underline ? "underline" : "none";
-          td.style.textAlign = cell.align;
-          td.style.color = cell.textColor;
-          td.style.backgroundColor = cell.fillColor;
+function readAssignmentInputs(){
+  state.assignment.title = el('assignmentTitle').value.trim();
+  state.assignment.code = el('assignmentCode').value.trim();
+  state.assignment.variant = el('variantCode').value.trim();
+  state.assignment.instructions = el('assignmentInstructions').value.trim();
+  state.assignment.scriptUrl = el('scriptUrl').value.trim();
+  state.assignment.rules = {
+    cell: el('ruleCell').value.trim().toUpperCase(),
+    text: el('ruleText').value,
+    align: el('ruleAlign').value,
+    bold: el('ruleBold').value,
+    fill: el('ruleFill').value,
+    checkFill: el('ruleCheckFill').value
+  };
+  if(!state.student.code || state.student.code === state.assignment.code || el('studentCode').value.trim() === ''){
+    state.student.code = state.assignment.code;
+    el('studentCode').value = state.assignment.code;
+  }
+}
 
-          if(state.selected === key){
-            td.classList.add("active");
-          }
+function refreshInfo(){
+  el('infoTitle').textContent = state.assignment.title || 'zatím nenastaveno';
+  el('infoCode').textContent = state.assignment.code || '—';
+  el('infoVariant').textContent = state.assignment.variant || '—';
+  el('infoSheets').textContent = state.assignment.scriptUrl ? 'nastaveno' : 'nenastaveno';
+  el('infoInstructions').textContent = state.assignment.instructions || 'zatím nejsou nastavené';
+}
 
-          td.addEventListener("click", () => {
-            state.selected = key;
-            updateSelectedUI();
-            renderTable();
-          });
+function renderTable(){
+  const table = el('sheetTable');
+  table.innerHTML = '';
+  const thead = document.createElement('thead');
+  const hr = document.createElement('tr');
+  const empty = document.createElement('th');
+  empty.textContent = '';
+  hr.appendChild(empty);
+  for(let c=0;c<COLS;c++){
+    const th = document.createElement('th');
+    th.textContent = COLS_NAMES[c];
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr);
+  table.appendChild(thead);
 
-          tr.appendChild(td);
-        }
-        tbody.appendChild(tr);
-      }
-
-      table.appendChild(tbody);
+  const tbody = document.createElement('tbody');
+  for(let r=0;r<ROWS;r++){
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.textContent = String(r+1);
+    tr.appendChild(th);
+    for(let c=0;c<COLS;c++){
+      const key = cellKey(r,c);
+      const cell = getCellState(key);
+      const td = document.createElement('td');
+      td.dataset.key = key;
+      td.textContent = cell.value;
+      td.style.fontWeight = cell.bold ? 'bold' : 'normal';
+      td.style.fontStyle = cell.italic ? 'italic' : 'normal';
+      td.style.textDecoration = cell.underline ? 'underline' : 'none';
+      td.style.textAlign = cell.align;
+      td.style.color = cell.textColor;
+      td.style.backgroundColor = cell.fillColor;
+      if(key === state.selected) td.classList.add('active');
+      td.addEventListener('click', ()=>{ state.selected = key; updateSelectedUI(); renderTable(); });
+      tr.appendChild(td);
     }
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+}
 
-    function updateSelectedUI(){
-      el("selectedCellLabel").textContent = state.selected;
-      const cell = getCellState(state.selected);
-      el("cellInput").value = cell.value || "";
-      el("textColor").value = normalizeColor(cell.textColor);
-      el("fillColor").value = normalizeColor(cell.fillColor);
-    }
+function updateSelectedUI(){
+  el('selectedCellLabel').textContent = state.selected;
+  const cell = getCellState(state.selected);
+  el('cellInput').value = cell.value || '';
+  el('textColor').value = normalizeHex(cell.textColor) || '#111111';
+  el('fillColor').value = normalizeHex(cell.fillColor) || '#ffffff';
+}
 
-    function normalizeColor(color){
-      if(!color) return "#ffffff";
-      if(color.startsWith("#")) return color;
-      return "#ffffff";
-    }
+function applyCellValue(){
+  const cell = getCellState(state.selected);
+  cell.value = el('cellInput').value;
+  renderTable();
+}
+function toggleStyle(prop){ const c = getCellState(state.selected); c[prop] = !c[prop]; renderTable(); }
+function setAlign(val){ const c = getCellState(state.selected); c.align = val; renderTable(); }
+function setTextColor(){ const c = getCellState(state.selected); c.textColor = el('textColor').value; renderTable(); }
+function setFillColor(){ const c = getCellState(state.selected); c.fillColor = el('fillColor').value; renderTable(); }
+function clearCell(){ state.cells[state.selected] = defaultCell(); updateSelectedUI(); renderTable(); }
+function clearFormat(){ const value = getCellState(state.selected).value; state.cells[state.selected] = defaultCell(); state.cells[state.selected].value = value; updateSelectedUI(); renderTable(); }
 
-    function applyCellValue(){
-      const cell = getCellState(state.selected);
-      cell.value = el("cellInput").value;
-      renderTable();
-    }
+function unlockAdminFlow(){
+  if(!state.teacherPin){
+    el('adminPanel').classList.toggle('open');
+    state.adminUnlocked = el('adminPanel').classList.contains('open');
+    return;
+  }
+  if(state.adminUnlocked){
+    el('adminPanel').classList.toggle('open');
+    state.adminUnlocked = el('adminPanel').classList.contains('open');
+    return;
+  }
+  const entered = prompt('Zadej PIN učitele');
+  if(entered === null) return;
+  if(entered === state.teacherPin){
+    state.adminUnlocked = true;
+    el('adminPanel').classList.add('open');
+    showStatus('Admin byl odemčen.');
+  } else {
+    showStatus('PIN není správný.', true);
+  }
+}
 
-    function toggleStyle(prop){
-      const cell = getCellState(state.selected);
-      cell[prop] = !cell[prop];
-      renderTable();
-    }
+function savePin(){
+  const p1 = el('teacherPin').value;
+  const p2 = el('teacherPin2').value;
+  if(!p1){ showStatus('PIN nemůže být prázdný.', true); return; }
+  if(p1 !== p2){ showStatus('PIN a potvrzení PINu se neshodují.', true); return; }
+  state.teacherPin = p1;
+  saveAll();
+  el('teacherPin').value = '';
+  el('teacherPin2').value = '';
+  showStatus('PIN učitele byl uložen.');
+}
 
-    function setAlign(value){
-      const cell = getCellState(state.selected);
-      cell.align = value;
-      renderTable();
-    }
+function saveAssignmentToJson(){
+  readAssignmentInputs();
+  const payload = {
+    type: 'edutab-assignment',
+    version: 1,
+    assignment: state.assignment
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.assignment.code || 'zadani-edutab') + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  saveAll();
+  refreshInfo();
+  showStatus('Zadání bylo uloženo do JSON.');
+}
 
-    function setTextColor(){
-      const cell = getCellState(state.selected);
-      cell.textColor = el("textColor").value;
-      renderTable();
-    }
-
-    function setFillColor(){
-      const cell = getCellState(state.selected);
-      cell.fillColor = el("fillColor").value;
-      renderTable();
-    }
-
-    function clearCell(){
-      state.cells[state.selected] = defaultCell();
-      updateSelectedUI();
-      renderTable();
-    }
-
-    function clearFormat(){
-      const cell = getCellState(state.selected);
-      const value = cell.value;
-      state.cells[state.selected] = defaultCell();
-      state.cells[state.selected].value = value;
-      updateSelectedUI();
-      renderTable();
-    }
-
-    function saveAdminSettings(){
-      state.admin.assignmentTitle = el("assignmentTitle").value.trim();
-      state.admin.assignmentCode = el("assignmentCode").value.trim();
-      state.admin.variantCode = el("variantCode").value.trim();
-      state.admin.scriptUrl = el("scriptUrl").value.trim();
-      state.admin.instructions = el("assignmentInstructions").value.trim();
-
-      if(state.admin.assignmentCode){
-        el("studentCode").value = state.admin.assignmentCode;
-        state.student.code = state.admin.assignmentCode;
-      }
-
-      saveState();
-      refreshInfo();
-      showStatus("Nastavení učitele bylo uloženo.");
-    }
-
-    function loadAdminToInputs(){
-      el("assignmentTitle").value = state.admin.assignmentTitle || "";
-      el("assignmentCode").value = state.admin.assignmentCode || "";
-      el("variantCode").value = state.admin.variantCode || "";
-      el("scriptUrl").value = state.admin.scriptUrl || "";
-      el("assignmentInstructions").value = state.admin.instructions || "";
-    }
-
-    function readStudentInputs(){
-      state.student.name = el("studentName").value.trim();
-      state.student.className = el("studentClass").value.trim();
-      state.student.school = el("studentSchool").value.trim();
-      state.student.code = el("studentCode").value.trim();
-    }
-
-    function loadStudentToInputs(){
-      el("studentName").value = state.student.name || "";
-      el("studentClass").value = state.student.className || "";
-      el("studentSchool").value = state.student.school || "";
-      el("studentCode").value = state.student.code || "";
-    }
-
-    function saveState(){
-      readStudentInputs();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function loadState(){
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw){
+function loadAssignmentFromJson(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const data = JSON.parse(e.target.result);
+      if(data.assignment){
+        state.assignment = data.assignment;
+        if(!state.student.code) state.student.code = state.assignment.code || '';
+        fillInputsFromState();
         refreshInfo();
-        renderTable();
-        updateSelectedUI();
-        return;
+        saveAll();
+        showStatus('Zadání bylo načteno z JSON.');
+      } else {
+        showStatus('Soubor neobsahuje platné zadání.', true);
       }
-      try{
-        const parsed = JSON.parse(raw);
-        if(parsed.admin) state.admin = parsed.admin;
-        if(parsed.student) state.student = parsed.student;
-        if(parsed.cells) state.cells = parsed.cells;
-        if(parsed.selected) state.selected = parsed.selected;
-        if(parsed.submittedCount !== undefined) state.submittedCount = parsed.submittedCount;
-      }catch(e){
-        console.error(e);
+    }catch(err){
+      showStatus('Soubor se nepodařilo načíst: ' + err, true);
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+function buildStudentLink(){
+  readAssignmentInputs();
+  const shareAssignment = {
+    title: state.assignment.title,
+    code: state.assignment.code,
+    variant: state.assignment.variant,
+    instructions: state.assignment.instructions,
+    scriptUrl: state.assignment.scriptUrl,
+    rules: state.assignment.rules
+  };
+  const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(shareAssignment)))));
+  const base = location.origin + location.pathname;
+  return base + '?student=1&assignment=' + encoded;
+}
+
+function generateLinkAndQr(){
+  const link = buildStudentLink();
+  el('studentLink').value = link;
+  el('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(link);
+  saveAll();
+  showStatus('Žákovský odkaz a QR kód byly vygenerovány.');
+}
+
+function copyStudentLink(){
+  const link = el('studentLink').value.trim();
+  if(!link){ showStatus('Nejprve vygeneruj žákovský odkaz.', true); return; }
+  navigator.clipboard.writeText(link).then(()=> showStatus('Odkaz byl zkopírován.'), ()=> showStatus('Kopírování se nepodařilo.', true));
+}
+
+
+function buildAiRequest(){
+  return {
+    topic: el('aiTopic').value.trim(),
+    difficulty: el('aiDifficulty').value,
+    grade: el('aiGrade').value.trim(),
+    steps: Number(el('aiSteps').value || 4),
+    context: el('aiContext').value.trim()
+  };
+}
+
+function pad2(v){ return String(v).padStart(2,'0'); }
+
+function randomChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function makeAssignmentCode(topic){
+  const t = (topic || 'AI').replace(/[^A-Za-z0-9]+/g,'').toUpperCase().slice(0,6) || 'AITAB';
+  const d = new Date();
+  return `${t}-${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}`;
+}
+
+function localAiGenerate(){
+  const req = buildAiRequest();
+  const topics = {
+    'formátování buněk': {texts:['Jaro','Rozvrh','Výlet'], fills:['#ffff00','#d9f99d','#bfdbfe']},
+    'rozvrh': {texts:['Matematika','Čeština','Informatika'], fills:['#fde68a','#bfdbfe','#fecaca']},
+    'známky': {texts:['1','2','Výborný'], fills:['#dcfce7','#fef3c7','#fee2e2']}
+  };
+  const normalizedTopic = (req.topic || 'formátování buněk').toLowerCase();
+  const preset = topics[normalizedTopic] || {texts:['Jaro','Tabulka','Úkol'], fills:['#ffff00','#bfdbfe','#fecaca']};
+  const cellsEasy = ['B2','C3','D4','E3','F4'];
+  const cellsMid = ['C4','D5','E4','F6','G3'];
+  const cellsHard = ['B6','C7','E5','F7','G6'];
+  const cell = req.difficulty === 'lehká' ? randomChoice(cellsEasy) : req.difficulty === 'střední' ? randomChoice(cellsMid) : randomChoice(cellsHard);
+  const text = randomChoice(preset.texts);
+  const fill = randomChoice(preset.fills);
+  const align = req.difficulty === 'lehká' ? 'left' : 'center';
+  const bold = req.difficulty === 'lehká' ? 'true' : 'true';
+  const title = `AI zadání – ${req.topic || 'tabulkový editor'} (${req.difficulty})`;
+  const code = makeAssignmentCode(req.topic);
+  const variant = 'AI-' + Math.floor(Math.random()*900 + 100);
+  const instructionParts = [
+    `Označ buňku ${cell}`,
+    `napiš text „${text}“`,
+    'nastav tučné písmo'
+  ];
+  if(req.steps >= 4) instructionParts.push(align === 'center' ? 'zarovnej text na střed' : 'zarovnej text vlevo');
+  if(req.steps >= 5 || req.difficulty !== 'lehká') instructionParts.push(`nastav výplň buňky na zvolenou barvu`);
+  instructionParts.push('a ulož práci');
+  const instructions = instructionParts.join(', ') + '.';
+  const assignment = {
+    title,
+    code,
+    variant,
+    instructions,
+    scriptUrl: state.assignment.scriptUrl || '',
+    rules: {
+      cell,
+      text,
+      align,
+      bold,
+      fill,
+      checkFill: req.steps >= 5 || req.difficulty !== 'lehká' ? 'true' : 'false'
+    }
+  };
+  applyAssignmentObject(assignment);
+  el('aiJsonBox').value = JSON.stringify(assignment, null, 2);
+  showStatus('AI návrh bez API byl vytvořen a rovnou vložen do zadání.');
+}
+
+function buildAiPrompt(){
+  const req = buildAiRequest();
+  const prompt = `Vytvoř zadání pro školní tabulkový editor a vrať pouze JSON bez vysvětlení.\n` +
+    `Požadavky: téma=${req.topic || 'tabulkový editor'}, obtížnost=${req.difficulty}, třída/ročník=${req.grade || 'neuvedeno'}, počet kroků=${req.steps}, kontext=${req.context || 'výuka informatiky'}.\n` +
+    `Použij přesně tento tvar JSON: {"title":"...","code":"...","variant":"...","instructions":"...","rules":{"cell":"C4","text":"Jaro","align":"center","bold":"true","fill":"#ffff00","checkFill":"true"}}.`;
+  el('aiJsonBox').value = prompt;
+  showStatus('Prompt pro AI byl vytvořen.');
+}
+
+function applyAssignmentObject(obj){
+  state.assignment.title = obj.title || '';
+  state.assignment.code = obj.code || '';
+  state.assignment.variant = obj.variant || '';
+  state.assignment.instructions = obj.instructions || '';
+  state.assignment.scriptUrl = obj.scriptUrl || state.assignment.scriptUrl || '';
+  state.assignment.rules = {
+    cell: obj.rules?.cell || '',
+    text: obj.rules?.text || '',
+    align: obj.rules?.align || '',
+    bold: obj.rules?.bold || '',
+    fill: obj.rules?.fill || '#ffff00',
+    checkFill: obj.rules?.checkFill || 'false'
+  };
+  if(!state.student.code) state.student.code = state.assignment.code || '';
+  fillInputsFromState();
+  refreshInfo();
+  saveAll();
+}
+
+function applyAiJson(){
+  const raw = el('aiJsonBox').value.trim();
+  if(!raw){ showStatus('Do pole Prompt / AI JSON nejprve vlož JSON.', true); return; }
+  try{
+    const obj = JSON.parse(raw);
+    applyAssignmentObject(obj.assignment ? obj.assignment : obj);
+    showStatus('AI JSON byl načten do zadání.');
+  }catch(err){
+    showStatus('AI JSON se nepodařilo načíst. Zkontroluj formát.
+
+' + err, true);
+  }
+}
+
+async function generateViaAiEndpoint(){
+  const endpoint = el('aiEndpointUrl').value.trim();
+  if(!endpoint){
+    showStatus('Nejdřív zadej AI endpoint URL, nebo použij AI návrh bez API.', true);
+    return;
+  }
+  const req = buildAiRequest();
+  try{
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(req)
+    });
+    const text = await res.text();
+    let data;
+    try{ data = JSON.parse(text); }catch(e){ throw new Error('Endpoint nevrátil JSON.'); }
+    const assignment = data.assignment || data;
+    applyAssignmentObject(assignment);
+    el('aiJsonBox').value = JSON.stringify(assignment, null, 2);
+    showStatus('AI endpoint vygeneroval zadání a to bylo načteno do adminu.');
+  } catch(err){
+    showStatus('Generování přes AI endpoint selhalo.
+
+' + err, true);
+  }
+}
+
+function applyAssignmentFromUrl(){
+  const params = new URLSearchParams(location.search);
+  const assignment = params.get('assignment');
+  const studentMode = params.get('student');
+  if(studentMode === '1'){
+    el('adminBtn').classList.add('hidden');
+    el('adminPanel').classList.remove('open');
+  }
+  if(!assignment) return;
+  try{
+    const decoded = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(assignment)))));
+    state.assignment = decoded;
+    if(!state.student.code) state.student.code = decoded.code || '';
+    fillInputsFromState();
+    refreshInfo();
+    saveAll();
+  }catch(e){
+    console.error(e);
+    showStatus('Zadání z odkazu se nepodařilo načíst.', true);
+  }
+}
+
+function evaluateNow(){
+  readAssignmentInputs();
+  const rules = state.assignment.rules || {};
+  const detail = [];
+  let max = 0;
+  let score = 0;
+
+  if(rules.cell){
+    const cell = getCellState(rules.cell);
+    if(!cell){
+      detail.push('Cílová buňka ' + rules.cell + ' nebyla nalezena.');
+    } else {
+      if(rules.text !== ''){
+        max++;
+        if((cell.value || '') === rules.text){ score++; detail.push('Text: splněno'); }
+        else detail.push('Text: nesplněno');
       }
-
-      loadAdminToInputs();
-      loadStudentToInputs();
-      refreshInfo();
-      renderTable();
-      updateSelectedUI();
-    }
-
-    function exportResult(){
-      readStudentInputs();
-      const payload = buildPayload();
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "vysledek-edutab.json";
-      a.click();
-      URL.revokeObjectURL(url);
-      showStatus("Výsledek byl exportován do JSON souboru.");
-    }
-
-    function buildPayload(){
-      let filled = 0;
-      for(const key in state.cells){
-        if(state.cells[key] && state.cells[key].value && state.cells[key].value.trim() !== ""){
-          filled++;
-        }
+      if(rules.bold !== ''){
+        max++;
+        const req = rules.bold === 'true';
+        if(!!cell.bold === req){ score++; detail.push('Tučné písmo: splněno'); }
+        else detail.push('Tučné písmo: nesplněno');
       }
-
-      return {
-        timestamp: new Date().toISOString(),
-        studentName: state.student.name,
-        class: state.student.className,
-        school: state.student.school,
-        assignmentTitle: state.admin.assignmentTitle,
-        assignmentCode: state.student.code || state.admin.assignmentCode,
-        variantCode: state.admin.variantCode,
-        instructions: state.admin.instructions,
-        filledCells: filled,
-        totalCells: ROWS * COLS,
-        score: filled,
-        total: ROWS * COLS,
-        timeSpent: "",
-        submittedCount: state.submittedCount,
-        cells: state.cells
-      };
-    }
-
-    async function submitToSheets(){
-      readStudentInputs();
-
-      if(!state.student.name){
-        showStatus("Nejdřív vyplň jméno a příjmení žáka.", true);
-        return;
+      if(rules.align){
+        max++;
+        if(cell.align === rules.align){ score++; detail.push('Zarovnání: splněno'); }
+        else detail.push('Zarovnání: nesplněno');
       }
-      if(!state.student.className){
-        showStatus("Nejdřív vyplň třídu.", true);
-        return;
-      }
-      if(!state.admin.scriptUrl){
-        showStatus("V admin nastavení zatím není vyplněná Apps Script URL.", true);
-        return;
-      }
-
-      const payload = buildPayload();
-
-      try{
-        const response = await fetch(state.admin.scriptUrl, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-
-        const text = await response.text();
-
-        let data;
-        try{
-          data = JSON.parse(text);
-        }catch{
-          data = null;
-        }
-
-        if(data && data.status === "success"){
-          state.submittedCount = data.submissionNumber ?? null;
-          saveState();
-          showStatus(
-            "Výsledek byl úspěšně odeslán.\n" +
-            "Žák: " + state.student.name + "\n" +
-            "Kód zadání: " + (state.student.code || state.admin.assignmentCode || "—") + "\n" +
-            "Pořadové číslo odevzdání: " + (data.submissionNumber ?? "neuvedeno")
-          );
-        }else{
-          showStatus("Odeslání proběhlo, ale odpověď serveru nebyla očekávaná.\n\n" + text, true);
-        }
-      }catch(err){
-        showStatus("Odeslání selhalo.\n\n" + err, true);
+      if(rules.checkFill === 'true'){
+        max++;
+        if(normalizeHex(cell.fillColor) === normalizeHex(rules.fill)){ score++; detail.push('Barva výplně: splněno'); }
+        else detail.push('Barva výplně: nesplněno');
       }
     }
+  }
 
-    function toggleAdmin(){
-      el("adminPanel").classList.toggle("open");
+  const percent = max ? Math.round((score / max) * 100) : 0;
+  let rating = 'Bez hodnocení';
+  if(percent >= 85) rating = 'Výborné';
+  else if(percent >= 60) rating = 'Dobré';
+  else rating = 'Je potřeba dopracovat';
+
+  state.lastEvaluation = { score, max, percent, rating, detail, timestamp: new Date().toISOString() };
+  el('scoreText').textContent = score + ' / ' + max + ' bodů (' + percent + ' %)';
+  el('ratingText').textContent = rating;
+  el('evaluationDetail').textContent = detail.length ? detail.join('\n') : 'Zatím nebyla nastavena hodnoticí pravidla.';
+  saveAll();
+  showStatus('Vyhodnocení bylo provedeno.');
+}
+
+function renderEvaluation(){
+  if(!state.lastEvaluation){
+    el('scoreText').textContent = 'zatím nevyhodnoceno';
+    el('ratingText').textContent = '—';
+    el('evaluationDetail').textContent = 'Po kliknutí na „Vyhodnotit teď" se zobrazí rozpad bodů.';
+    return;
+  }
+  el('scoreText').textContent = state.lastEvaluation.score + ' / ' + state.lastEvaluation.max + ' bodů (' + state.lastEvaluation.percent + ' %)';
+  el('ratingText').textContent = state.lastEvaluation.rating;
+  el('evaluationDetail').textContent = state.lastEvaluation.detail.join('\n');
+}
+
+function appendResultLocal(){
+  readStudentInputs();
+  const ev = state.lastEvaluation || { score:0, max:0, percent:0 };
+  const row = {
+    name: state.student.name,
+    className: state.student.className,
+    code: state.student.code || state.assignment.code,
+    score: ev.score,
+    max: ev.max,
+    percent: ev.percent
+  };
+  state.results.push(row);
+  saveAll();
+  renderResults();
+}
+
+function renderResults(){
+  const tbody = el('resultsTable').querySelector('tbody');
+  tbody.innerHTML = '';
+  state.results.forEach(r => {
+    const tr = document.createElement('tr');
+    if(r.percent >= 85) tr.className = 'scoreGood';
+    else if(r.percent >= 60) tr.className = 'scoreMid';
+    else tr.className = 'scoreLow';
+    tr.innerHTML = `<td>${escapeHtml(r.name || '')}</td><td>${escapeHtml(r.className || '')}</td><td>${escapeHtml(r.code || '')}</td><td>${r.score} / ${r.max}</td><td>${r.percent} %</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+function buildResultPayload(){
+  readStudentInputs();
+  const ev = state.lastEvaluation || { score:0, max:0, percent:0, rating:'Bez hodnocení', detail:[] };
+  return {
+    timestamp: new Date().toISOString(),
+    studentName: state.student.name,
+    class: state.student.className,
+    school: state.student.school,
+    assignmentTitle: state.assignment.title,
+    assignmentCode: state.student.code || state.assignment.code,
+    variantCode: state.assignment.variant,
+    instructions: state.assignment.instructions,
+    score: ev.score,
+    total: ev.max,
+    percent: ev.percent,
+    rating: ev.rating,
+    evaluationDetail: ev.detail,
+    cells: state.cells
+  };
+}
+
+function exportResult(){
+  const payload = buildResultPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'vysledek-edutab.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showStatus('Výsledek byl exportován do JSON souboru.');
+}
+
+async function submitToSheets(){
+  readStudentInputs();
+  if(!state.student.name){ showStatus('Bez jména nelze odeslat výsledek.', true); return; }
+  if(!state.student.className){ showStatus('Bez třídy nelze odeslat výsledek.', true); return; }
+  if(!state.assignment.scriptUrl){ showStatus('V adminu není nastavená Google Apps Script URL.', true); return; }
+  if(!state.lastEvaluation) evaluateNow();
+  const payload = buildResultPayload();
+  try{
+    const response = await fetch(state.assignment.scriptUrl, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    const text = await response.text();
+    let data = null;
+    try{ data = JSON.parse(text); }catch(e){}
+    appendResultLocal();
+    if(data && data.status === 'success'){
+      showStatus('Výsledek byl úspěšně odeslán.\nPořadové číslo odevzdání: ' + (data.submissionNumber ?? 'neuvedeno'));
+    } else {
+      showStatus('Odeslání proběhlo, ale odpověď serveru nebyla standardní.\n\n' + text, true);
     }
+  } catch(err){
+    showStatus('Odeslání selhalo.\n\n' + err, true);
+  }
+}
 
-    function bindEvents(){
-      el("adminToggleBtn").addEventListener("click", toggleAdmin);
-      el("hideAdminBtn").addEventListener("click", toggleAdmin);
-      el("saveAdminBtn").addEventListener("click", saveAdminSettings);
+function bind(){
+  el('adminBtn').addEventListener('click', unlockAdminFlow);
+  el('savePinBtn').addEventListener('click', savePin);
+  el('saveAdminSettingsBtn').addEventListener('click', ()=>{ readAssignmentInputs(); refreshInfo(); saveAll(); showStatus('Nastavení učitele bylo uloženo.'); });
+  el('saveAssignmentBtn').addEventListener('click', saveAssignmentToJson);
+  el('loadAssignmentBtn').addEventListener('click', ()=> el('assignmentFileInput').click());
+  el('assignmentFileInput').addEventListener('change', e => { if(e.target.files[0]) loadAssignmentFromJson(e.target.files[0]); });
+  el('generateLinkBtn').addEventListener('click', generateLinkAndQr);
+  el('copyLinkBtn').addEventListener('click', copyStudentLink);
+  el('aiGenerateLocalBtn').addEventListener('click', localAiGenerate);
+  el('aiGenerateRemoteBtn').addEventListener('click', generateViaAiEndpoint);
+  el('aiBuildPromptBtn').addEventListener('click', buildAiPrompt);
+  el('aiApplyJsonBtn').addEventListener('click', applyAiJson);
 
-      el("saveBtn").addEventListener("click", () => {
-        saveState();
-        showStatus("Práce byla průběžně uložena.");
-      });
+  el('saveWorkBtn').addEventListener('click', ()=>{ saveAll(); showStatus('Práce byla průběžně uložena.'); });
+  el('loadWorkBtn').addEventListener('click', ()=>{ loadAll(); fillInputsFromState(); refreshInfo(); renderTable(); updateSelectedUI(); renderEvaluation(); renderResults(); showStatus('Práce byla obnovena.'); });
+  el('exportResultBtn').addEventListener('click', exportResult);
+  el('evaluateBtn').addEventListener('click', evaluateNow);
+  el('submitBtn').addEventListener('click', submitToSheets);
 
-      el("loadBtn").addEventListener("click", () => {
-        loadState();
-        showStatus("Práce byla obnovena z uloženého stavu.");
-      });
+  el('applyCellBtn').addEventListener('click', ()=>{ applyCellValue(); saveAll(); });
+  el('cellInput').addEventListener('keydown', e => { if(e.key === 'Enter'){ applyCellValue(); saveAll(); } });
+  el('boldBtn').addEventListener('click', ()=>{ toggleStyle('bold'); saveAll(); });
+  el('italicBtn').addEventListener('click', ()=>{ toggleStyle('italic'); saveAll(); });
+  el('underlineBtn').addEventListener('click', ()=>{ toggleStyle('underline'); saveAll(); });
+  el('alignLeftBtn').addEventListener('click', ()=>{ setAlign('left'); saveAll(); });
+  el('alignCenterBtn').addEventListener('click', ()=>{ setAlign('center'); saveAll(); });
+  el('alignRightBtn').addEventListener('click', ()=>{ setAlign('right'); saveAll(); });
+  el('textColor').addEventListener('change', ()=>{ setTextColor(); saveAll(); });
+  el('fillColor').addEventListener('change', ()=>{ setFillColor(); saveAll(); });
+  el('clearCellBtn').addEventListener('click', ()=>{ clearCell(); saveAll(); });
+  el('clearFormatBtn').addEventListener('click', ()=>{ clearFormat(); saveAll(); });
 
-      el("exportBtn").addEventListener("click", exportResult);
-      el("submitBtn").addEventListener("click", submitToSheets);
+  ['studentName','studentClass','studentSchool','studentCode'].forEach(id => el(id).addEventListener('input', saveAll));
+}
 
-      el("applyCellBtn").addEventListener("click", () => {
-        applyCellValue();
-        saveState();
-      });
+function init(){
+  loadAll();
+  bind();
+  fillInputsFromState();
+  applyAssignmentFromUrl();
+  refreshInfo();
+  renderTable();
+  updateSelectedUI();
+  renderEvaluation();
+  renderResults();
+}
 
-      el("cellInput").addEventListener("keydown", (e) => {
-        if(e.key === "Enter"){
-          applyCellValue();
-          saveState();
-        }
-      });
-
-      el("boldBtn").addEventListener("click", () => { toggleStyle("bold"); saveState(); });
-      el("italicBtn").addEventListener("click", () => { toggleStyle("italic"); saveState(); });
-      el("underlineBtn").addEventListener("click", () => { toggleStyle("underline"); saveState(); });
-
-      el("alignLeftBtn").addEventListener("click", () => { setAlign("left"); saveState(); });
-      el("alignCenterBtn").addEventListener("click", () => { setAlign("center"); saveState(); });
-      el("alignRightBtn").addEventListener("click", () => { setAlign("right"); saveState(); });
-
-      el("textColor").addEventListener("change", () => { setTextColor(); saveState(); });
-      el("fillColor").addEventListener("change", () => { setFillColor(); saveState(); });
-
-      el("clearCellBtn").addEventListener("click", () => { clearCell(); saveState(); });
-      el("clearFormatBtn").addEventListener("click", () => { clearFormat(); saveState(); });
-
-      ["studentName","studentClass","studentSchool","studentCode"].forEach(id => {
-        el(id).addEventListener("input", saveState);
-      });
-    }
-
-    function init(){
-      bindEvents();
-      renderTable();
-      updateSelectedUI();
-      loadState();
-      refreshInfo();
-    }
-
-    init();
-  </script>
+init();
+</script>
 </body>
 </html>
