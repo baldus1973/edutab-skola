@@ -1,1069 +1,284 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduTab – verze se zadáními</title>
-  <style>
-    :root{
-      --bg:#f3f4f6;
-      --panel:#ffffff;
-      --text:#1f2937;
-      --line:#d1d5db;
-      --green:#166534;
-      --green2:#15803d;
-      --blue:#2563eb;
-      --red:#dc2626;
-      --amber:#d97706;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-    .wrap{max-width:1440px;margin:0 auto;padding:16px}
-    .hero{
-      background:linear-gradient(180deg,var(--green),var(--green2));
-      color:#fff;border-radius:20px;padding:22px;margin-bottom:14px;
-      box-shadow:0 10px 24px rgba(0,0,0,.08)
-    }
-    .hero h1{margin:0 0 10px;font-size:28px}
-    .hero p{margin:0;line-height:1.5}
-    .bar,.panel,.sheetWrap,.formulaBar{background:var(--panel);border:1px solid var(--line);border-radius:18px}
-    .bar{display:flex;flex-wrap:wrap;gap:8px;padding:10px;margin-bottom:12px;align-items:center}
-    .panel{padding:14px}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
-    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
-    h2,h3{margin:0 0 12px}
-    button{border:none;border-radius:14px;padding:11px 15px;font-size:15px;cursor:pointer}
-    button:hover{transform:translateY(-1px)}
-    .btn-green{background:#15803d;color:#fff}
-    .btn-blue{background:var(--blue);color:#fff}
-    .btn-red{background:var(--red);color:#fff}
-    .btn-gray{background:#f3f4f6;color:#111827;border:1px solid var(--line)}
-    .btn-amber{background:var(--amber);color:#fff}
-    .btn-small{padding:9px 12px;min-width:42px;font-weight:bold}
-    input[type="text"],input[type="password"],textarea,select{width:100%;padding:12px 14px;font-size:16px;border:1px solid #cbd5e1;border-radius:12px;background:#fff}
-    textarea{resize:vertical;min-height:88px}
-    label{display:block;font-size:14px;margin:0 0 6px;font-weight:bold}
-    .muted{color:#6b7280}
-    .infoBox{border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fafafa;line-height:1.45;margin-bottom:10px}
-    .admin{display:none;background:#fff7ed;border:2px solid #f59e0b;border-radius:18px;padding:14px;margin-bottom:12px}
-    .admin.open{display:block}
-    .formulaBar{padding:10px;display:grid;grid-template-columns:96px 1fr 130px;gap:10px;align-items:center;margin-bottom:12px}
-    .cellBadge{border:1px solid #cbd5e1;border-radius:12px;background:#fff;padding:12px;text-align:center;font-weight:bold}
-    .sheetWrap{padding:12px;overflow:auto}
-    table.sheet{border-collapse:collapse;min-width:980px;width:100%;background:#fff}
-    table.sheet th,table.sheet td{border:1px solid var(--line);min-width:90px;height:36px;padding:6px 8px;vertical-align:middle}
-    table.sheet th{background:#f8fafc;text-align:center}
-    table.sheet td.active{outline:3px solid var(--blue);outline-offset:-3px;background:#eff6ff}
-    .status{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;white-space:pre-line}
-    .status.show{display:block}
-    .status.ok{background:#f0fdf4;border:1px solid #86efac}
-    .status.err{background:#fef2f2;border:1px solid #fca5a5}
-    .qrBox{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
-    .qrBox img{width:180px;height:180px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px}
-    .scoreGood{background:#dcfce7}
-    .scoreMid{background:#fef3c7}
-    .scoreLow{background:#fee2e2}
-    .resultsTable{width:100%;border-collapse:collapse}
-    .resultsTable th,.resultsTable td{border:1px solid var(--line);padding:8px;text-align:left}
-    .resultsTable th{background:#f8fafc}
-    .hidden{display:none}
-    @media (max-width:960px){
-      .grid2,.grid3,.row2,.row3{grid-template-columns:1fr}
-      .formulaBar{grid-template-columns:1fr}
-      .wrap{padding:10px}
-      .hero h1{font-size:24px}
-      button{width:100%}
-      .bar{align-items:stretch}
-      .bar > *{width:100%}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduTab – další level</title>
+<style>
+  :root{--bg:#f6f7fb;--panel:#ffffff;--line:#d8deea;--ink:#1f2a37;--muted:#667085;--accent:#5b6cff;--accent2:#0ea5a6;--good:#16a34a;--warn:#d97706;--bad:#dc2626;--soft:#eef2ff}
+  *{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .app{display:grid;grid-template-columns:250px 1fr 320px;gap:14px;min-height:100vh;padding:14px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px rgba(16,24,40,.05)} .left,.right{padding:14px;overflow:auto}
+  .center{display:grid;grid-template-rows:auto auto 1fr auto;gap:12px} h1{font-size:20px;margin:0 0 10px 0} h2{font-size:14px;margin:14px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .toolgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  button,.btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);font-weight:600;font-size:14px}
+  button:hover,.btn:hover{background:#f8faff}.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.accent2{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .field{display:grid;gap:6px;margin-bottom:10px}.field label{font-size:12px;color:var(--muted);font-weight:700}
+  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit}.field textarea{min-height:80px;resize:vertical}
+  .topbar,.bottombar{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px 12px}.topbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}
+  .titleBox{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;font-weight:900}
+  .topstats{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:7px 10px;border-radius:999px;background:var(--soft);font-size:12px;font-weight:700}.inline{display:flex;gap:8px;flex-wrap:wrap}
+  .formula{display:grid;grid-template-columns:120px 1fr auto auto auto auto;gap:10px;align-items:center}.formula .addr{background:#f8fafc;border:1px dashed var(--line);padding:10px 12px;border-radius:12px;font-weight:700;text-align:center}
+  .sheetWrap{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:auto;padding:10px} table.sheet{border-collapse:separate;border-spacing:0;min-width:980px;width:100%}
+  .sheet th,.sheet td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);height:34px;min-width:88px;padding:0;position:relative}.sheet th:first-child,.sheet td:first-child{border-left:1px solid var(--line)}.sheet tr:first-child th{border-top:1px solid var(--line)}
+  .sheet th{background:#fbfcff;font-size:12px;color:var(--muted);font-weight:800;text-align:center}
+  .sheet th.sel-col,.sheet th.sel-row,.sheet th.sel-corner{background:#dbe7ff;color:#21307a;box-shadow:inset 0 0 0 1px #9fb7ff}
+  .sheet td{background:#fff;vertical-align:top}
+  .sheet td.col-mark{background:#f7faff}
+  .sheet td.row-mark{background:#f9fbff}
+  .sheet td.cross-mark{background:#f1f6ff}
+  .sheet td.active{outline:2px solid var(--accent);outline-offset:-2px;z-index:2}
+  .sheet td.range{background:#dfeaff}
+  .sheet td.range.col-mark,.sheet td.range.row-mark,.sheet td.range.cross-mark{background:#d8e6ff}
+  body.dragging, body.dragging *{user-select:none; -webkit-user-select:none}
+  .cell-display{width:100%;height:100%;padding:7px 8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.resize-handle-col,.resize-handle-row{position:absolute;background:transparent;z-index:5}.resize-handle-col{top:0;right:-3px;width:6px;height:100%;cursor:col-resize}.resize-handle-row{bottom:-3px;left:0;height:6px;width:100%;cursor:row-resize}
+  .fill-handle{position:absolute;width:8px;height:8px;border-radius:2px;background:var(--accent);right:-4px;bottom:-4px;cursor:crosshair;z-index:6}
+  .mini{font-size:12px;color:var(--muted)} .resultsTable{width:100%;border-collapse:collapse}.resultsTable th,.resultsTable td{border-bottom:1px solid var(--line);padding:8px;font-size:13px;text-align:left}
+  .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}.b-good{background:#ecfdf3;color:#166534}.b-mid{background:#fffbeb;color:#92400e}.b-bad{background:#fef2f2;color:#991b1b}
+  .actionLog{display:grid;gap:8px;max-height:220px;overflow:auto;padding-right:4px}.logItem{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fafbff}.logTime{font-size:11px;color:var(--muted)} .logText{font-size:13px;font-weight:600}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .hidden{display:none !important}.right .section{padding-bottom:12px;border-bottom:1px solid #edf0f6;margin-bottom:12px}
+  @media (max-width: 1220px){ .app{grid-template-columns:220px 1fr} .right{grid-column:1 / -1} } @media (max-width: 860px){ .app{grid-template-columns:1fr} .formula{grid-template-columns:1fr} .topbar{grid-template-columns:1fr} }
+</style>
 </head>
 <body>
-<div class="wrap">
-  <div class="hero">
-    <h1>EduTab – verze se zadáními</h1>
-    <p>
-      Učitel může vytvářet vlastní zadání, ukládat je do JSON, znovu je načítat,
-      vygenerovat žákovský odkaz i QR kód a odesílat výsledky do Google Sheets.
-      Žákům se zobrazuje jen žákovská část. Admin je chráněný PINem.
-    </p>
-  </div>
-
-  <div class="bar">
-    <button class="btn-red" id="adminBtn">Admin / Nastavení učitele</button>
-    <button class="btn-green" id="saveWorkBtn">Uložit průběžně</button>
-    <button class="btn-gray" id="loadWorkBtn">Obnovit práci</button>
-    <button class="btn-gray" id="exportResultBtn">Export výsledku</button>
-    <button class="btn-blue" id="evaluateBtn">Vyhodnotit teď</button>
-    <button class="btn-blue" id="submitBtn">Odeslat výsledek do Google Sheets</button>
-  </div>
-
-  <div class="admin" id="adminPanel">
-    <h2>Admin / Zadání</h2>
-
-    <div class="grid2">
-      <div class="panel">
-        <h3>Zabezpečení učitele</h3>
-        <div class="row2">
-          <div>
-            <label>PIN učitele</label>
-            <input type="password" id="teacherPin" placeholder="Např. 2468">
-          </div>
-          <div>
-            <label>Potvrzení PINu</label>
-            <input type="password" id="teacherPin2" placeholder="Zopakuj PIN">
-          </div>
-        </div>
-        <button class="btn-green" id="savePinBtn">Uložit PIN</button>
-      </div>
-
-      <div class="panel">
-        <h3>Základ zadání</h3>
-        <div class="row2">
-          <div>
-            <label>Název zadání</label>
-            <input type="text" id="assignmentTitle" placeholder="Např. Formátování buněk 6.A">
-          </div>
-          <div>
-            <label>Kód zadání</label>
-            <input type="text" id="assignmentCode" placeholder="Např. TAB-6A-01">
-          </div>
-        </div>
-        <div class="row2">
-          <div>
-            <label>Varianta</label>
-            <input type="text" id="variantCode" placeholder="Např. VAR-A">
-          </div>
-          <div>
-            <label>Google Apps Script URL</label>
-            <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
-          </div>
-        </div>
-        <label>Instrukce pro žáka</label>
-        <textarea id="assignmentInstructions" placeholder="Např. Označ buňku C4, napiš Jaro, nastav tučné, na střed a žlutou výplň."></textarea>
-      </div>
+<div class="app">
+  <aside class="panel left">
+    <h1>EduTab</h1><div class="mini">Další level výukového datového prostoru</div>
+    <h2>Výběr</h2><div class="toolgrid">
+      <button id="selectAllBtn" title="Označit celou plochu">Vše</button><button id="mergeBtn" title="Sloučit označené buňky">Sloučit</button>
+      <button id="unmergeBtn" title="Zrušit sloučení">Rozdělit</button><button id="clearBtn" title="Vymazat označené buňky">Vymazat</button></div>
+    <h2>Vzhled</h2><div class="toolgrid">
+      <button id="boldBtn" title="Tučné">B</button><button id="italicBtn" title="Kurzíva">I</button><button id="underlineBtn" title="Podtržení">U</button><button id="borderBtn" title="Ohraničení">Ohr.</button>
+      <button id="leftBtn" title="Zarovnat vlevo">←</button><button id="centerBtn" title="Na střed">↔</button><button id="rightBtn" title="Zarovnat vpravo">→</button><input id="fillColor" type="color" title="Barva výplně"><input id="textColor" type="color" title="Barva textu" value="#1f2a37"><select id="fontSize" title="Velikost textu"><option value="12">12</option><option value="14" selected>14</option><option value="16">16</option><option value="18">18</option><option value="20">20</option></select>
     </div>
-
-    <div class="grid2">
-      <div class="panel">
-        <h3>Pravidla hodnocení</h3>
-        <div class="row3">
-          <div>
-            <label>Cílová buňka</label>
-            <input type="text" id="ruleCell" placeholder="C4">
-          </div>
-          <div>
-            <label>Požadovaný text</label>
-            <input type="text" id="ruleText" placeholder="Jaro">
-          </div>
-          <div>
-            <label>Zarovnání</label>
-            <select id="ruleAlign">
-              <option value="">Neřešit</option>
-              <option value="left">Vlevo</option>
-              <option value="center">Na střed</option>
-              <option value="right">Vpravo</option>
-            </select>
-          </div>
-        </div>
-        <div class="row3">
-          <div>
-            <label>Tučné</label>
-            <select id="ruleBold">
-              <option value="">Neřešit</option>
-              <option value="true">Ano</option>
-              <option value="false">Ne</option>
-            </select>
-          </div>
-          <div>
-            <label>Barva výplně</label>
-            <input type="color" id="ruleFill" value="#ffff00">
-          </div>
-          <div>
-            <label>Kontrolovat barvu výplně</label>
-            <select id="ruleCheckFill">
-              <option value="false">Ne</option>
-              <option value="true">Ano</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>Práce se zadáními</h3>
-        <div class="bar" style="padding:0;border:none;background:transparent;margin:0 0 10px 0">
-          <button class="btn-green" id="saveAssignmentBtn">Uložit zadání do JSON</button>
-          <button class="btn-gray" id="loadAssignmentBtn">Načíst zadání z JSON</button>
-          <input type="file" id="assignmentFileInput" accept="application/json" class="hidden">
-        </div>
-        <div class="bar" style="padding:0;border:none;background:transparent;margin:0 0 10px 0">
-          <button class="btn-blue" id="generateLinkBtn">Vygenerovat žákovský odkaz + QR</button>
-          <button class="btn-gray" id="saveAdminSettingsBtn">Uložit nastavení učitele</button>
-        </div>
-        <div class="infoBox"><strong>Tip:</strong> Nejprve vyplň zadání, potom ho ulož do JSON. Tím si vytvoříš vlastní knihovnu úloh pro další roky nebo pro různé třídy.</div>
-      </div>
+    <h2>Data</h2><div class="toolgrid">
+      <button id="sortAscBtn" title="Seřadit vzestupně">A→Z</button><button id="sortDescBtn" title="Seřadit sestupně">Z→A</button><button id="filterBtn" title="Filtrovat podle textu">Filtr</button><button id="addRecordBtn" title="Přidat nový řádek">+ Záznam</button><button id="csvBtn" title="Načíst CSV data">Import CSV</button><button id="taskGenBtn" title="Vytvořit cvičné zadání z dat">Úloha</button><input id="csvFile" type="file" accept=".csv,text/csv" class="hidden">
     </div>
-
-
-    <div class="grid2">
-      <div class="panel">
-        <h3>AI generování zadání</h3>
-        <div class="infoBox"><strong>Důležité:</strong> Tato verze umí zadání generovat dvěma způsoby: <strong>1) lokální chytrý generátor</strong> bez API a <strong>2) přes AI endpoint</strong>, pokud si ho učitel nastaví přes Apps Script nebo jiný backend. API klíč nepatří do HTML stránky.</div>
-        <div class="row3">
-          <div>
-            <label>Téma</label>
-            <input type="text" id="aiTopic" placeholder="Např. formátování buněk, rozvrh, známky">
-          </div>
-          <div>
-            <label>Obtížnost</label>
-            <select id="aiDifficulty">
-              <option value="lehká">Lehká</option>
-              <option value="střední" selected>Střední</option>
-              <option value="těžší">Těžší</option>
-            </select>
-          </div>
-          <div>
-            <label>Ročník / třída</label>
-            <input type="text" id="aiGrade" placeholder="Např. 5. ročník nebo 7.A">
-          </div>
-        </div>
-        <div class="row3">
-          <div>
-            <label>Počet kroků</label>
-            <select id="aiSteps">
-              <option value="3">3</option>
-              <option value="4" selected>4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-          <div>
-            <label>AI endpoint URL (volitelné)</label>
-            <input type="text" id="aiEndpointUrl" placeholder="https://... pokud chceš skutečné AI volání">
-          </div>
-          <div>
-            <label>Preferovaný kontext</label>
-            <input type="text" id="aiContext" placeholder="Např. informatika, tabulky, školní administrace">
-          </div>
-        </div>
-        <div class="bar" style="padding:0;border:none;background:transparent;margin:8px 0 8px 0">
-          <button class="btn-amber" id="aiGenerateLocalBtn">AI návrh bez API</button>
-          <button class="btn-blue" id="aiGenerateRemoteBtn">Generovat přes AI endpoint</button>
-          <button class="btn-gray" id="aiBuildPromptBtn">Vytvořit prompt</button>
-          <button class="btn-gray" id="aiApplyJsonBtn">Použít vložený AI JSON</button>
-        </div>
-        <label>Prompt / AI JSON</label>
-        <textarea id="aiJsonBox" placeholder='Sem se vloží prompt nebo JSON odpověď. Očekávaný tvar: {"title":"...","code":"...","variant":"...","instructions":"...","rules":{"cell":"C4","text":"Jaro","align":"center","bold":"true","fill":"#ffff00","checkFill":"true"}}'></textarea>
-      </div>
-
-      <div class="panel">
-        <h3>Jak AI režim funguje</h3>
-        <div class="infoBox">Tlačítko <strong>AI návrh bez API</strong> vytvoří smysluplné zadání přímo v prohlížeči. Je vhodné pro rychlou přípravu hodin a funguje i bez internetu navíc.</div>
-        <div class="infoBox">Tlačítko <strong>Generovat přes AI endpoint</strong> odešle parametry na tebou zadaný backend a očekává JSON odpověď. To je správná cesta, pokud chceš skutečné AI generování přímo uvnitř adminu.</div>
-        <div class="infoBox">Tlačítko <strong>Vytvořit prompt</strong> ti připraví přesný prompt, který můžeš poslat do ChatGPT. Odpověď ve formátu JSON pak vložíš zpět přes <strong>Použít vložený AI JSON</strong>.</div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>Distribuce žákům</h3>
-      <div class="qrBox">
-        <div style="flex:1;min-width:280px;">
-          <label>Žákovský odkaz</label>
-          <textarea id="studentLink" placeholder="Po kliknutí na Vygenerovat žákovský odkaz + QR se sem vloží odkaz."></textarea>
-          <div class="bar" style="padding:0;border:none;background:transparent;margin:10px 0 0 0">
-            <button class="btn-gray" id="copyLinkBtn">Kopírovat odkaz</button>
-          </div>
-          <div class="infoBox">Žákovský odkaz neotevírá admin automaticky. Žák uvidí jen zadání a pracovní část.</div>
-        </div>
-        <div>
-          <img id="qrImage" alt="QR kód pro žákovský odkaz">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid2">
-    <div class="panel">
-      <h3>Identifikace žáka</h3>
-      <div class="row2">
-        <div>
-          <label>Jméno a příjmení</label>
-          <input type="text" id="studentName" placeholder="Jméno a příjmení žáka">
-        </div>
-        <div>
-          <label>Třída</label>
-          <input type="text" id="studentClass" placeholder="Např. 6.A">
-        </div>
-      </div>
-      <div class="row2">
-        <div>
-          <label>Škola</label>
-          <input type="text" id="studentSchool" placeholder="Název školy">
-        </div>
-        <div>
-          <label>Kód zadání</label>
-          <input type="text" id="studentCode" placeholder="Převezme se ze zadání">
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h3>Aktuální zadání</h3>
-      <div class="infoBox"><strong>Název:</strong> <span id="infoTitle">zatím nenastaveno</span></div>
-      <div class="infoBox"><strong>Kód:</strong> <span id="infoCode">—</span></div>
-      <div class="infoBox"><strong>Varianta:</strong> <span id="infoVariant">—</span></div>
-      <div class="infoBox"><strong>Google Sheets:</strong> <span id="infoSheets">nenastaveno</span></div>
-      <div class="infoBox"><strong>Instrukce:</strong><br><span id="infoInstructions">zatím nejsou nastavené</span></div>
-    </div>
-  </div>
-
-  <div class="bar">
-    <button class="btn-small btn-gray" id="boldBtn">B</button>
-    <button class="btn-small btn-gray" id="italicBtn"><em>I</em></button>
-    <button class="btn-small btn-gray" id="underlineBtn"><u>U</u></button>
-    <button class="btn-gray" id="alignLeftBtn">← Vlevo</button>
-    <button class="btn-gray" id="alignCenterBtn">↔ Na střed</button>
-    <button class="btn-gray" id="alignRightBtn">→ Vpravo</button>
-    <label style="display:inline-block;margin:0 0 0 6px">Text</label>
-    <input type="color" id="textColor" value="#111111" style="width:60px;height:40px;border:none;background:transparent">
-    <label style="display:inline-block;margin:0 0 0 6px">Výplň</label>
-    <input type="color" id="fillColor" value="#ffffff" style="width:60px;height:40px;border:none;background:transparent">
-    <button class="btn-gray" id="clearCellBtn">Vymazat buňku</button>
-    <button class="btn-gray" id="clearFormatBtn">Smazat formát</button>
-  </div>
-
-  <div class="formulaBar">
-    <div class="cellBadge" id="selectedCellLabel">A1</div>
-    <input type="text" id="cellInput" placeholder="Napiš text do vybrané buňky">
-    <button class="btn-green" id="applyCellBtn">Použít</button>
-  </div>
-
-  <div class="sheetWrap">
-    <table class="sheet" id="sheetTable"></table>
-  </div>
-
-  <div class="grid2" style="margin-top:12px;">
-    <div class="panel">
-      <h3>Vyhodnocení</h3>
-      <div class="infoBox"><strong>Body:</strong> <span id="scoreText">zatím nevyhodnoceno</span></div>
-      <div class="infoBox"><strong>Slovní hodnocení:</strong> <span id="ratingText">—</span></div>
-      <div class="infoBox"><strong>Kontrola úkolu:</strong><br><span id="evaluationDetail">Po kliknutí na „Vyhodnotit teď" se zobrazí rozpad bodů.</span></div>
-    </div>
-    <div class="panel">
-      <h3>Lokální přehled výsledků</h3>
-      <div class="infoBox">Tento přehled je uložený v prohlížeči učitele. Trvalé ukládání celé třídy dál zajišťuje Google Sheets.</div>
-      <div style="overflow:auto;max-height:280px;">
-        <table class="resultsTable" id="resultsTable">
-          <thead>
-            <tr>
-              <th>Žák</th>
-              <th>Třída</th>
-              <th>Kód</th>
-              <th>Body</th>
-              <th>%</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="status" id="statusBox"></div>
+    <h2>Grafy</h2><div class="toolgrid"><button data-chart="bar" class="chartBtn" title="Sloupcový graf">Sloupce</button><button data-chart="line" class="chartBtn" title="Čárový graf">Čára</button><button data-chart="pie" class="chartBtn" title="Koláčový graf">Koláč</button><button data-chart="area" class="chartBtn" title="Plošný graf">Plocha</button></div>
+    <h2>Test a hodnocení</h2><div class="toolgrid"><button id="hypothesisBtn" class="accent2" title="Ověřit hypotézu nad daty">Hypotéza</button><button id="saveResultBtn" class="primary" title="Uložit výsledek do dashboardu">Uložit výsledek</button><button id="pdfBtn" title="Tisk do PDF">PDF</button><button id="guideBtn" title="Průvodce">Průvodce</button></div>
+  </aside>
+  <main class="center">
+    <div class="topbar"><div class="titleBox"><div class="logo">E</div><div><div style="font-weight:800">Pracovní plocha dat</div></div></div><div class="topstats"><div class="pill" id="selectionInfo">Výběr: A1</div><div class="pill" id="sheetInfo">Rozměr: 20 × 10</div><div class="pill" id="historyInfo">Historie: 0 kroků</div></div><div class="inline"><button id="undoBtn" title="Krok zpět">↩ Zpět</button><button id="redoBtn" title="Krok dopředu">↪ Znovu</button><button id="adminBtn" title="Nastavení učitele">Admin</button><button id="submitGoogleBtn" class="primary" title="Odeslat výsledek do Google Sheets">Odeslat</button><button id="saveStateBtn" title="Uložit lokálně">Uložit</button><button id="loadStateBtn" title="Obnovit lokální stav">Obnovit</button></div></div>
+    <div class="topbar formula"><div class="addr" id="addrBox">A1</div><input id="formulaInput" type="text" placeholder="Obsah nebo výraz, např. =SUMA(B2:B6)"><button id="applyFormulaBtn" class="primary">Použít</button><button id="sumQuickBtn" title="Rychlá suma vybraného rozsahu">Σ</button><button id="avgQuickBtn" title="Rychlý průměr vybraného rozsahu">Ø</button><button id="countQuickBtn" title="Rychlý počet čísel">#</button></div>
+    <div class="sheetWrap panel"><table id="sheet" class="sheet"></table></div>
+    <div class="bottombar"><div class="inline" style="justify-content:space-between"><div><strong>Vlastnosti výběru</strong> <span class="mini" id="propsInfo">1 buňka</span></div><div class="mini" id="statusMsg">Připraveno.</div></div></div>
+  </main>
+  <aside class="panel right">
+    <div class="section"><h1 style="font-size:18px">Zobrazení výsledků</h1><canvas id="chartCanvas" width="280" height="180"></canvas><div class="mini" id="chartCaption">Vyber oblast a zvol typ grafu.</div></div>
+    <div class="section"><h1 style="font-size:18px">Ověř hypotézu</h1><div class="field"><label>Rozsah</label><input id="hypoRange" placeholder="Např. B2:B10"></div><div class="field"><label>Typ ověření</label><select id="hypoType"><option value="avg_gt">Průměr je větší než</option><option value="sum_gt">Součet je větší než</option><option value="max_gt">Maximum je větší než</option><option value="count_eq">Počet čísel je roven</option></select></div><div class="field"><label>Hodnota</label><input id="hypoValue" placeholder="Např. 10"></div><div class="field"><label>Komentář</label><textarea id="hypoComment" placeholder="Jak výsledek interpretovat?"></textarea></div><button id="runHypoBtn" class="accent2">Vyhodnotit</button><div id="hypoResult" class="mini" style="margin-top:10px"></div></div>
+    <div class="section"><h1 style="font-size:18px">Cvičná úloha</h1><div id="taskText" class="mini">Zatím není vytvořená.</div><div class="inline" style="margin-top:10px"><button id="checkTaskBtn">Zkontrolovat</button><button id="newTaskBtn">Nová úloha</button></div><div id="taskResult" class="mini" style="margin-top:10px"></div></div>
+    <div class="section" id="adminPanel" style="display:none"><h1 style="font-size:18px">Nastavení učitele</h1><div class="field"><label>PIN učitele</label><input id="teacherPin" type="password" placeholder="Např. 1234"></div><div class="field"><label>Google Apps Script URL</label><input id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec"></div><div class="field"><label>Název zadání</label><input id="assignmentTitle" placeholder="Např. Práce s daty"></div><div class="inline"><button id="saveAdminBtn" class="primary">Uložit nastavení</button><button id="closeAdminBtn">Zavřít</button></div><div class="mini" id="adminInfo" style="margin-top:8px">Admin je zamčený, dokud nezadáš správný PIN.</div></div><div><h1 style="font-size:18px">Učitelský dashboard</h1><div class="field"><label>Jméno žáka</label><input id="studentName" placeholder="Jméno a příjmení"></div><div class="field"><label>Třída</label><input id="studentClass" placeholder="Třída"></div><table class="resultsTable"><thead><tr><th>Žák</th><th>Třída</th><th>Body</th><th>Stav</th></tr></thead><tbody id="resultsBody"></tbody></table><h2 style="margin-top:14px">Kroky žáka</h2><div id="actionLog" class="actionLog"></div></div>
+  </aside>
 </div>
-
 <script>
-const STORAGE_KEY = 'edutab_assignments_v1';
-const RESULTS_KEY = 'edutab_assignments_results_v1';
-const ROWS = 12;
-const COLS = 8;
-const COLS_NAMES = ['A','B','C','D','E','F','G','H'];
-
-const state = {
-  adminUnlocked: false,
-  teacherPin: '',
-  assignment: {
-    title: '',
-    code: '',
-    variant: '',
-    instructions: '',
-    scriptUrl: '',
-    rules: {
-      cell: '',
-      text: '',
-      align: '',
-      bold: '',
-      fill: '#ffff00',
-      checkFill: 'false'
-    }
-  },
-  student: {
-    name: '',
-    className: '',
-    school: '',
-    code: ''
-  },
-  selected: 'A1',
-  cells: {},
-  lastEvaluation: null,
-  results: []
-};
-
-function el(id){ return document.getElementById(id); }
-function showStatus(msg, error=false){
-  const box = el('statusBox');
-  box.textContent = msg;
-  box.className = 'status show ' + (error ? 'err' : 'ok');
-}
-function cellKey(r,c){ return COLS_NAMES[c] + (r+1); }
-function defaultCell(){
-  return { value:'', bold:false, italic:false, underline:false, align:'left', textColor:'#111111', fillColor:'#ffffff' };
-}
-function getCellState(key){
-  if(!state.cells[key]) state.cells[key] = defaultCell();
-  return state.cells[key];
-}
-function normalizeHex(v){ return (v || '').toLowerCase(); }
-
-function saveAll(){
-  readStudentInputs();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    teacherPin: state.teacherPin,
-    assignment: state.assignment,
-    student: state.student,
-    selected: state.selected,
-    cells: state.cells,
-    lastEvaluation: state.lastEvaluation,
-    aiPrefs: {
-      topic: el('aiTopic') ? el('aiTopic').value : '',
-      difficulty: el('aiDifficulty') ? el('aiDifficulty').value : 'střední',
-      grade: el('aiGrade') ? el('aiGrade').value : '',
-      steps: el('aiSteps') ? el('aiSteps').value : '4',
-      endpoint: el('aiEndpointUrl') ? el('aiEndpointUrl').value : '',
-      context: el('aiContext') ? el('aiContext').value : '',
-      jsonBox: el('aiJsonBox') ? el('aiJsonBox').value : ''
-    }
-  }));
-  localStorage.setItem(RESULTS_KEY, JSON.stringify(state.results));
-}
-
-function loadAll(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  const rawResults = localStorage.getItem(RESULTS_KEY);
-  if(raw){
-    try{
-      const data = JSON.parse(raw);
-      if(data.teacherPin) state.teacherPin = data.teacherPin;
-      if(data.assignment) state.assignment = data.assignment;
-      if(data.student) state.student = data.student;
-      if(data.selected) state.selected = data.selected;
-      if(data.cells) state.cells = data.cells;
-      if(data.lastEvaluation) state.lastEvaluation = data.lastEvaluation;
-      if(data.aiPrefs){
-        state.aiPrefs = data.aiPrefs;
-      }
-    }catch(e){ console.error(e); }
+const STORAGE='edutab_dalsi_level_v3_history';let COLNAMES='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').slice(0,10);
+const state={rows:20,cols:10,colWidths:Array(10).fill(100),rowHeights:Array(20).fill(34),cells:{},merges:{},selection:{start:'A1',end:'A1'},results:[],task:null,admin:{pin:'1234',scriptUrl:'',assignmentTitle:''},history:{undoStack:[],redoStack:[],actionLog:[],lastMeta:null}};
+const q=(s)=>document.querySelector(s), qa=(s)=>[...document.querySelectorAll(s)];
+function key(r,c){return COLNAMES[c]+(r+1)} function parseAddr(addr){const m=String(addr).match(/^([A-Z]+)(\d+)$/); if(!m) return null; return {c:COLNAMES.indexOf(m[1]),r:Number(m[2])-1};}
+function rangeCells(a,b){const A=parseAddr(a),B=parseAddr(b); if(!A||!B) return []; const r1=Math.min(A.r,B.r),r2=Math.max(A.r,B.r),c1=Math.min(A.c,B.c),c2=Math.max(A.c,B.c); const out=[]; for(let r=r1;r<=r2;r++) for(let c=c1;c<=c2;c++) out.push(key(r,c)); return out;}
+function getCell(k){if(!state.cells[k]) state.cells[k]={v:'',f:'',style:{bold:false,italic:false,underline:false,align:'left',fill:'#ffffff',color:'#1f2a37',fontSize:14,border:false}}; return state.cells[k];}
+function selectionCells(){return rangeCells(state.selection.start,state.selection.end)} function sum(arr){return arr.reduce((a,b)=>a+b,0)} function setStatus(m){q('#statusMsg').textContent=m}
+function cloneCoreState(){return JSON.parse(JSON.stringify({rows:state.rows,cols:state.cols,colWidths:state.colWidths,rowHeights:state.rowHeights,cells:state.cells,merges:state.merges,selection:state.selection,results:state.results,task:state.task,admin:state.admin}))}
+function applyCoreState(snapshot){Object.assign(state, JSON.parse(JSON.stringify(snapshot))); if(!state.history) state.history={undoStack:[],redoStack:[],actionLog:[],lastMeta:null}; COLNAMES='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').slice(0,state.cols)}
+function ensureHistory(){if(!state.history) state.history={undoStack:[],redoStack:[],actionLog:[],lastMeta:null}; if(!Array.isArray(state.history.undoStack)) state.history.undoStack=[]; if(!Array.isArray(state.history.redoStack)) state.history.redoStack=[]; if(!Array.isArray(state.history.actionLog)) state.history.actionLog=[]}
+function renderActionLog(){const box=q('#actionLog'); if(!box) return; box.innerHTML=''; const list=(state.history&&state.history.actionLog&&state.history.actionLog.length)?state.history.actionLog:[{time:'',label:'Zatím bez zaznamenaných kroků.'}]; list.forEach(item=>{const div=document.createElement('div'); div.className='logItem'; div.innerHTML='<div class="logText">'+item.label+'</div><div class="logTime">'+(item.time||'')+'</div>'; box.appendChild(div)})}
+function refreshHistoryButtons(){const ub=q('#undoBtn'), rb=q('#redoBtn'); if(ub) ub.disabled=!state.history || state.history.undoStack.length<=1; if(rb) rb.disabled=!state.history || !state.history.redoStack.length; const hi=q('#historyInfo'); if(hi) hi.textContent='Historie: '+((state.history&&state.history.undoStack)?Math.max(0,state.history.undoStack.length-1):0)+' kroků'}
+function persistState(message='Uloženo lokálně.'){localStorage.setItem(STORAGE,JSON.stringify(state)); renderDashboard(); renderActionLog(); refreshHistoryButtons(); if(message) setStatus(message)}
+function logAction(label){ensureHistory(); const stamp=new Date().toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); state.history.actionLog.unshift({time:stamp,label}); state.history.actionLog=state.history.actionLog.slice(0,40)}
+function pushHistory(label='Úprava', mergeKey='generic'){ensureHistory(); const now=Date.now(); const snap=cloneCoreState(); const last=state.history.lastMeta; const shouldMerge=last && last.mergeKey===mergeKey && (now-last.time)<1200; if(shouldMerge && state.history.undoStack.length){state.history.undoStack[state.history.undoStack.length-1]={label,snapshot:snap}} else {state.history.undoStack.push({label,snapshot:snap}); if(state.history.undoStack.length>80) state.history.undoStack.shift(); logAction(label)} state.history.redoStack=[]; state.history.lastMeta={mergeKey:mergeKey,time:now}; persistState('')}
+function initializeHistory(){ensureHistory(); if(!state.history.undoStack.length){state.history.undoStack=[{label:'Výchozí stav',snapshot:cloneCoreState()}]; state.history.redoStack=[]; state.history.lastMeta={mergeKey:'init',time:Date.now()}; logAction('Otevření pracovního prostoru'); persistState('')}}
+function saveState(){ if(q('#teacherPin')) state.admin.pin=q('#teacherPin').value.trim()||state.admin.pin||'1234'; if(q('#scriptUrl')) state.admin.scriptUrl=q('#scriptUrl').value.trim()||state.admin.scriptUrl||''; if(q('#assignmentTitle')) state.admin.assignmentTitle=q('#assignmentTitle').value.trim()||state.admin.assignmentTitle||''; persistState('Uloženo lokálně.'); }
+function loadState(){const raw=localStorage.getItem(STORAGE); if(!raw) return; const parsed=JSON.parse(raw); Object.assign(state, parsed); ensureHistory(); if(!state.admin) state.admin={pin:'1234',scriptUrl:'',assignmentTitle:''}; COLNAMES='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').slice(0,state.cols); renderAll(); if(q('#teacherPin')) q('#teacherPin').value=state.admin.pin||'1234'; if(q('#scriptUrl')) q('#scriptUrl').value=state.admin.scriptUrl||''; if(q('#assignmentTitle')) q('#assignmentTitle').value=state.admin.assignmentTitle||''; renderActionLog(); refreshHistoryButtons(); setStatus('Obnoveno.');}
+function undo(){ensureHistory(); if(state.history.undoStack.length<=1) return; const current={label:'Aktuální stav',snapshot:cloneCoreState()}; state.history.redoStack.push(current); state.history.undoStack.pop(); const prev=state.history.undoStack[state.history.undoStack.length-1]; applyCoreState(prev.snapshot); logAction('Krok zpět'); renderAll(); persistState('Vrácen poslední krok.')}
+function redo(){ensureHistory(); if(!state.history.redoStack.length) return; const entry=state.history.redoStack.pop(); state.history.undoStack.push({label:entry.label,snapshot:JSON.parse(JSON.stringify(entry.snapshot))}); applyCoreState(entry.snapshot); logAction('Krok dopředu'); renderAll(); persistState('Obnoven další krok.')}
+function selectedRect(){const A=parseAddr(state.selection.start),B=parseAddr(state.selection.end); return {r1:Math.min(A.r,B.r),r2:Math.max(A.r,B.r),c1:Math.min(A.c,B.c),c2:Math.max(A.c,B.c)}}
+function updateSelectionInfo(){q('#selectionInfo').textContent=`Výběr: ${state.selection.start}${state.selection.start!==state.selection.end?' až '+state.selection.end:''}`; q('#addrBox').textContent=state.selection.start===state.selection.end?state.selection.start:`${state.selection.start}:${state.selection.end}`; q('#propsInfo').textContent=`${selectionCells().length} buněk`; q('#formulaInput').value=activeValue();}
+function activeValue(){const c=getCell(state.selection.start); return c.f||c.v||''}
+function isMergedChild(addr){for(const root in state.merges){const m=state.merges[root], p=parseAddr(root), cells=rangeCells(root,key(p.r+m.rspan-1,p.c+m.cspan-1)); if(cells.includes(addr)&&addr!==root) return true;} return false;}
+function applyStyle(el,s){el.style.fontWeight=s.bold?'700':'400'; el.style.fontStyle=s.italic?'italic':'normal'; el.style.textDecoration=s.underline?'underline':'none'; el.style.textAlign=s.align; el.style.background=s.fill; el.style.color=s.color; el.style.fontSize=s.fontSize+'px'; el.style.border=s.border?'1px solid #94a3b8':'none';}
+function expandRange(ref){if(ref.includes(':')){const [a,b]=ref.split(':'); return rangeCells(a.toUpperCase(),b.toUpperCase())} return [ref.toUpperCase()]}
+function numericValuesFromRange(ref){return expandRange(ref).map(a=>Number(displayValue(a))).filter(v=>!Number.isNaN(v))}
+function replaceCellRefs(expr){return expr.replace(/\$?[A-Z]+\$?\d+/g,m=>{const addr=m.replace(/\$/g,''); const v=displayValue(addr); if(v===''||v==null) return 0; if(!isNaN(Number(v))) return Number(v); return JSON.stringify(String(v));})}
+function evalFormula(formula){try{let f=formula.slice(1).trim(); f=f.replace(/SUMA\(([^)]+)\)/gi,(_,r)=>sum(numericValuesFromRange(r))); f=f.replace(/PRUMER\(([^)]+)\)/gi,(_,r)=>{const vals=numericValuesFromRange(r); return vals.length?sum(vals)/vals.length:0}); f=f.replace(/MAX\(([^)]+)\)/gi,(_,r)=>{const vals=numericValuesFromRange(r); return vals.length?Math.max(...vals):0}); f=f.replace(/POCET\(([^)]+)\)/gi,(_,r)=>numericValuesFromRange(r).length); f=f.replace(/DELKA\(([^)]+)\)/gi,(_,a)=>String(displayValue(a.trim())).length); f=f.replace(/ZLEVA\(([^,]+),([^)]+)\)/gi,(_,a,n)=>JSON.stringify(String(displayValue(a.trim())).substring(0,Number(n)))); f=f.replace(/PORADI\(([^,]+),([^)]+)\)/gi,(_,a,r)=>{const v=Number(displayValue(a.trim())); const vals=numericValuesFromRange(r).sort((x,y)=>y-x); return vals.indexOf(v)+1}); f=f.replace(/KDYZ\(([^,]+),([^,]+),([^)]+)\)/gi,(_,cond,yes,no)=>eval(cond)?yes:no); f=replaceCellRefs(f); const val=Function('"use strict"; return ('+f+');')(); return typeof val==='string'?val.replace(/^"(.*)"$/,'$1'):val;}catch(e){return '#CHYBA'}}
+function displayValue(addr){const cell=getCell(addr); return cell.f&&cell.f.startsWith('=')?evalFormula(cell.f):cell.v}
+function renderSheet(){
+  const table=q('#sheet');
+  table.innerHTML='';
+  const rect=selectedRect();
+  const wholeColumn = rect.r1===0 && rect.r2===state.rows-1;
+  const wholeRow = rect.c1===0 && rect.c2===state.cols-1;
+  const top=document.createElement('tr');
+  const corner=document.createElement('th');
+  corner.title='Označit vše';
+  if(rect.r1===0 && rect.c1===0 && rect.r2===state.rows-1 && rect.c2===state.cols-1) corner.classList.add('sel-corner');
+  corner.onclick=()=>{state.selection={start:'A1',end:key(state.rows-1,state.cols-1)}; renderSheet()};
+  top.appendChild(corner);
+  for(let c=0;c<state.cols;c++){
+    const th=document.createElement('th');
+    th.style.width=state.colWidths[c]+'px';
+    th.textContent=COLNAMES[c];
+    if((c>=rect.c1 && c<=rect.c2 && wholeColumn) || (rect.r1===0 && rect.r2===state.rows-1 && c>=rect.c1 && c<=rect.c2)) th.classList.add('sel-col');
+    th.onclick=()=>{state.selection={start:key(0,c),end:key(state.rows-1,c)}; renderSheet()};
+    const h=document.createElement('div');
+    h.className='resize-handle-col';
+    h.onmousedown=(e)=>startResizeCol(e,c);
+    th.appendChild(h);
+    top.appendChild(th);
   }
-  if(rawResults){
-    try{ state.results = JSON.parse(rawResults) || []; }catch(e){ console.error(e); }
-  }
-}
-
-function fillInputsFromState(){
-  el('assignmentTitle').value = state.assignment.title || '';
-  el('assignmentCode').value = state.assignment.code || '';
-  el('variantCode').value = state.assignment.variant || '';
-  el('assignmentInstructions').value = state.assignment.instructions || '';
-  el('scriptUrl').value = state.assignment.scriptUrl || '';
-  el('ruleCell').value = state.assignment.rules.cell || '';
-  el('ruleText').value = state.assignment.rules.text || '';
-  el('ruleAlign').value = state.assignment.rules.align || '';
-  el('ruleBold').value = state.assignment.rules.bold || '';
-  el('ruleFill').value = state.assignment.rules.fill || '#ffff00';
-  el('ruleCheckFill').value = state.assignment.rules.checkFill || 'false';
-
-  el('studentName').value = state.student.name || '';
-  el('studentClass').value = state.student.className || '';
-  el('studentSchool').value = state.student.school || '';
-  el('studentCode').value = state.student.code || state.assignment.code || '';
-  if(state.aiPrefs){
-    if(el('aiTopic')) el('aiTopic').value = state.aiPrefs.topic || '';
-    if(el('aiDifficulty')) el('aiDifficulty').value = state.aiPrefs.difficulty || 'střední';
-    if(el('aiGrade')) el('aiGrade').value = state.aiPrefs.grade || '';
-    if(el('aiSteps')) el('aiSteps').value = state.aiPrefs.steps || '4';
-    if(el('aiEndpointUrl')) el('aiEndpointUrl').value = state.aiPrefs.endpoint || '';
-    if(el('aiContext')) el('aiContext').value = state.aiPrefs.context || '';
-    if(el('aiJsonBox')) el('aiJsonBox').value = state.aiPrefs.jsonBox || '';
-  }
-}
-
-function readStudentInputs(){
-  state.student.name = el('studentName').value.trim();
-  state.student.className = el('studentClass').value.trim();
-  state.student.school = el('studentSchool').value.trim();
-  state.student.code = el('studentCode').value.trim();
-}
-
-function readAssignmentInputs(){
-  state.assignment.title = el('assignmentTitle').value.trim();
-  state.assignment.code = el('assignmentCode').value.trim();
-  state.assignment.variant = el('variantCode').value.trim();
-  state.assignment.instructions = el('assignmentInstructions').value.trim();
-  state.assignment.scriptUrl = el('scriptUrl').value.trim();
-  state.assignment.rules = {
-    cell: el('ruleCell').value.trim().toUpperCase(),
-    text: el('ruleText').value,
-    align: el('ruleAlign').value,
-    bold: el('ruleBold').value,
-    fill: el('ruleFill').value,
-    checkFill: el('ruleCheckFill').value
-  };
-  if(!state.student.code || state.student.code === state.assignment.code || el('studentCode').value.trim() === ''){
-    state.student.code = state.assignment.code;
-    el('studentCode').value = state.assignment.code;
-  }
-}
-
-function refreshInfo(){
-  el('infoTitle').textContent = state.assignment.title || 'zatím nenastaveno';
-  el('infoCode').textContent = state.assignment.code || '—';
-  el('infoVariant').textContent = state.assignment.variant || '—';
-  el('infoSheets').textContent = state.assignment.scriptUrl ? 'nastaveno' : 'nenastaveno';
-  el('infoInstructions').textContent = state.assignment.instructions || 'zatím nejsou nastavené';
-}
-
-function renderTable(){
-  const table = el('sheetTable');
-  table.innerHTML = '';
-  const thead = document.createElement('thead');
-  const hr = document.createElement('tr');
-  const empty = document.createElement('th');
-  empty.textContent = '';
-  hr.appendChild(empty);
-  for(let c=0;c<COLS;c++){
-    const th = document.createElement('th');
-    th.textContent = COLS_NAMES[c];
-    hr.appendChild(th);
-  }
-  thead.appendChild(hr);
-  table.appendChild(thead);
-
-  const tbody = document.createElement('tbody');
-  for(let r=0;r<ROWS;r++){
-    const tr = document.createElement('tr');
-    const th = document.createElement('th');
-    th.textContent = String(r+1);
+  table.appendChild(top);
+  for(let r=0;r<state.rows;r++){
+    const tr=document.createElement('tr');
+    const th=document.createElement('th');
+    th.textContent=r+1;
+    th.style.height=state.rowHeights[r]+'px';
+    if((r>=rect.r1 && r<=rect.r2 && wholeRow) || (rect.c1===0 && rect.c2===state.cols-1 && r>=rect.r1 && r<=rect.r2)) th.classList.add('sel-row');
+    th.onclick=()=>{state.selection={start:key(r,0),end:key(r,state.cols-1)}; renderSheet()};
+    const rh=document.createElement('div');
+    rh.className='resize-handle-row';
+    rh.onmousedown=(e)=>startResizeRow(e,r);
+    th.appendChild(rh);
     tr.appendChild(th);
-    for(let c=0;c<COLS;c++){
-      const key = cellKey(r,c);
-      const cell = getCellState(key);
-      const td = document.createElement('td');
-      td.dataset.key = key;
-      td.textContent = cell.value;
-      td.style.fontWeight = cell.bold ? 'bold' : 'normal';
-      td.style.fontStyle = cell.italic ? 'italic' : 'normal';
-      td.style.textDecoration = cell.underline ? 'underline' : 'none';
-      td.style.textAlign = cell.align;
-      td.style.color = cell.textColor;
-      td.style.backgroundColor = cell.fillColor;
-      if(key === state.selected) td.classList.add('active');
-      td.addEventListener('click', ()=>{ state.selected = key; updateSelectedUI(); renderTable(); });
+    for(let c=0;c<state.cols;c++){
+      const k=key(r,c);
+      if(isMergedChild(k)) continue;
+      const td=document.createElement('td');
+      td.dataset.addr=k;
+      td.style.width=state.colWidths[c]+'px';
+      td.style.height=state.rowHeights[r]+'px';
+      const selected=selectionCells().includes(k);
+      if(c>=rect.c1 && c<=rect.c2) td.classList.add('col-mark');
+      if(r>=rect.r1 && r<=rect.r2) td.classList.add('row-mark');
+      if(c>=rect.c1 && c<=rect.c2 && r>=rect.r1 && r<=rect.r2) td.classList.add('cross-mark');
+      if(selected) td.classList.add('range');
+      if(k===state.selection.start || (state.selection.start===state.selection.end && k===state.selection.end)) td.classList.add('active');
+      const merge=state.merges[k];
+      if(merge){td.colSpan=merge.cspan; td.rowSpan=merge.rspan;}
+      const d=document.createElement('div');
+      d.className='cell-display';
+      d.textContent=displayValue(k);
+      applyStyle(d,getCell(k).style);
+      td.appendChild(d);
+      td.onmousedown=(e)=>startSelect(e,k);
+      td.ondblclick=()=>{q('#formulaInput').focus(); q('#formulaInput').value=getCell(k).f||getCell(k).v};
+      if(k===state.selection.end){
+        const fh=document.createElement('div');
+        fh.className='fill-handle';
+        fh.title='Kopírovat tažením';
+        fh.onmousedown=(e)=>startFillDrag(e,k);
+        td.appendChild(fh);
+      }
       tr.appendChild(td);
     }
-    tbody.appendChild(tr);
+    table.appendChild(tr);
   }
-  table.appendChild(tbody);
+  updateSelectionInfo();
 }
-
-function updateSelectedUI(){
-  el('selectedCellLabel').textContent = state.selected;
-  const cell = getCellState(state.selected);
-  el('cellInput').value = cell.value || '';
-  el('textColor').value = normalizeHex(cell.textColor) || '#111111';
-  el('fillColor').value = normalizeHex(cell.fillColor) || '#ffffff';
+let dragSelect=false, dragMoveHandler=null, dragUpHandler=null, resizeMoveHandler=null, resizeUpHandler=null, fillMoveHandler=null, fillUpHandler=null; 
+function cellFromPoint(x,y){ const hit=document.elementFromPoint(x,y); if(!hit || !hit.closest) return null; return hit.closest('td[data-addr]'); }
+function cleanupWindowHandlers(){
+  if(dragMoveHandler){ window.removeEventListener('mousemove',dragMoveHandler); dragMoveHandler=null; }
+  if(dragUpHandler){ window.removeEventListener('mouseup',dragUpHandler); dragUpHandler=null; }
+  if(resizeMoveHandler){ window.removeEventListener('mousemove',resizeMoveHandler); resizeMoveHandler=null; }
+  if(resizeUpHandler){ window.removeEventListener('mouseup',resizeUpHandler); resizeUpHandler=null; }
+  if(fillMoveHandler){ window.removeEventListener('mousemove',fillMoveHandler); fillMoveHandler=null; }
+  if(fillUpHandler){ window.removeEventListener('mouseup',fillUpHandler); fillUpHandler=null; }
 }
-
-function applyCellValue(){
-  const cell = getCellState(state.selected);
-  cell.value = el('cellInput').value;
-  renderTable();
-}
-function toggleStyle(prop){ const c = getCellState(state.selected); c[prop] = !c[prop]; renderTable(); }
-function setAlign(val){ const c = getCellState(state.selected); c.align = val; renderTable(); }
-function setTextColor(){ const c = getCellState(state.selected); c.textColor = el('textColor').value; renderTable(); }
-function setFillColor(){ const c = getCellState(state.selected); c.fillColor = el('fillColor').value; renderTable(); }
-function clearCell(){ state.cells[state.selected] = defaultCell(); updateSelectedUI(); renderTable(); }
-function clearFormat(){ const value = getCellState(state.selected).value; state.cells[state.selected] = defaultCell(); state.cells[state.selected].value = value; updateSelectedUI(); renderTable(); }
-
-function unlockAdminFlow(){
-  if(!state.teacherPin){
-    el('adminPanel').classList.toggle('open');
-    state.adminUnlocked = el('adminPanel').classList.contains('open');
-    return;
-  }
-  if(state.adminUnlocked){
-    el('adminPanel').classList.toggle('open');
-    state.adminUnlocked = el('adminPanel').classList.contains('open');
-    return;
-  }
-  const entered = prompt('Zadej PIN učitele');
-  if(entered === null) return;
-  if(entered === state.teacherPin){
-    state.adminUnlocked = true;
-    el('adminPanel').classList.add('open');
-    showStatus('Admin byl odemčen.');
-  } else {
-    showStatus('PIN není správný.', true);
-  }
-}
-
-function savePin(){
-  const p1 = el('teacherPin').value;
-  const p2 = el('teacherPin2').value;
-  if(!p1){ showStatus('PIN nemůže být prázdný.', true); return; }
-  if(p1 !== p2){ showStatus('PIN a potvrzení PINu se neshodují.', true); return; }
-  state.teacherPin = p1;
-  saveAll();
-  el('teacherPin').value = '';
-  el('teacherPin2').value = '';
-  showStatus('PIN učitele byl uložen.');
-}
-
-function saveAssignmentToJson(){
-  readAssignmentInputs();
-  const payload = {
-    type: 'edutab-assignment',
-    version: 1,
-    assignment: state.assignment
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (state.assignment.code || 'zadani-edutab') + '.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  saveAll();
-  refreshInfo();
-  showStatus('Zadání bylo uloženo do JSON.');
-}
-
-function loadAssignmentFromJson(file){
-  const reader = new FileReader();
-  reader.onload = e => {
-    try{
-      const data = JSON.parse(e.target.result);
-      if(data.assignment){
-        state.assignment = data.assignment;
-        if(!state.student.code) state.student.code = state.assignment.code || '';
-        fillInputsFromState();
-        refreshInfo();
-        saveAll();
-        showStatus('Zadání bylo načteno z JSON.');
-      } else {
-        showStatus('Soubor neobsahuje platné zadání.', true);
-      }
-    }catch(err){
-      showStatus('Soubor se nepodařilo načíst: ' + err, true);
+function startSelect(e,addr){
+  if(e.target.closest && e.target.closest('.fill-handle')) return;
+  e.preventDefault();
+  cleanupWindowHandlers();
+  document.body.classList.add('dragging');
+  dragSelect=true;
+  state.selection={start:addr,end:addr};
+  renderSheet();
+  dragMoveHandler=(ev)=>{
+    if(!dragSelect) return;
+    const td=cellFromPoint(ev.clientX,ev.clientY);
+    if(!td || !td.dataset.addr) return;
+    if(state.selection.end!==td.dataset.addr){
+      state.selection.end=td.dataset.addr;
+      renderSheet();
     }
   };
-  reader.readAsText(file, 'utf-8');
-}
-
-function buildStudentLink(){
-  readAssignmentInputs();
-  const shareAssignment = {
-    title: state.assignment.title,
-    code: state.assignment.code,
-    variant: state.assignment.variant,
-    instructions: state.assignment.instructions,
-    scriptUrl: state.assignment.scriptUrl,
-    rules: state.assignment.rules
+  dragUpHandler=()=>{
+    dragSelect=false;
+    document.body.classList.remove('dragging');
+    cleanupWindowHandlers();
+    renderSheet();
+    pushHistory('Výběr oblasti','select-drag'); saveState();
   };
-  const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(shareAssignment)))));
-  const base = location.origin + location.pathname;
-  return base + '?student=1&assignment=' + encoded;
+  window.addEventListener('mousemove',dragMoveHandler, {passive:true});
+  window.addEventListener('mouseup',dragUpHandler, {passive:true});
 }
-
-function generateLinkAndQr(){
-  const link = buildStudentLink();
-  el('studentLink').value = link;
-  el('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(link);
-  saveAll();
-  showStatus('Žákovský odkaz a QR kód byly vygenerovány.');
+function startResizeCol(e,c){
+  e.stopPropagation(); e.preventDefault(); cleanupWindowHandlers(); document.body.classList.add('dragging');
+  const startX=e.clientX,start=state.colWidths[c];
+  resizeMoveHandler=(ev)=>{ state.colWidths[c]=Math.max(48,start+(ev.clientX-startX)); renderSheet(); };
+  resizeUpHandler=()=>{ document.body.classList.remove('dragging'); cleanupWindowHandlers(); pushHistory('Změna šířky sloupce','resize-col'); saveState(); };
+  window.addEventListener('mousemove',resizeMoveHandler);
+  window.addEventListener('mouseup',resizeUpHandler);
 }
-
-function copyStudentLink(){
-  const link = el('studentLink').value.trim();
-  if(!link){ showStatus('Nejprve vygeneruj žákovský odkaz.', true); return; }
-  navigator.clipboard.writeText(link).then(()=> showStatus('Odkaz byl zkopírován.'), ()=> showStatus('Kopírování se nepodařilo.', true));
+function startResizeRow(e,r){
+  e.stopPropagation(); e.preventDefault(); cleanupWindowHandlers(); document.body.classList.add('dragging');
+  const startY=e.clientY,start=state.rowHeights[r];
+  resizeMoveHandler=(ev)=>{ state.rowHeights[r]=Math.max(24,start+(ev.clientY-startY)); renderSheet(); };
+  resizeUpHandler=()=>{ cleanupWindowHandlers(); pushHistory('Změna výšky řádku','resize-row'); saveState(); };
+  window.addEventListener('mousemove',resizeMoveHandler);
+  window.addEventListener('mouseup',resizeUpHandler);
 }
-
-
-function buildAiRequest(){
-  return {
-    topic: el('aiTopic').value.trim(),
-    difficulty: el('aiDifficulty').value,
-    grade: el('aiGrade').value.trim(),
-    steps: Number(el('aiSteps').value || 4),
-    context: el('aiContext').value.trim()
+function startFillDrag(e){
+  e.stopPropagation(); e.preventDefault(); cleanupWindowHandlers(); document.body.classList.add('dragging');
+  const origin={...state.selection};
+  const originCells=selectionCells();
+  const base=originCells.map(a=>displayValue(a));
+  let step=null;
+  if(base.length>=2 && base.every(v=>!isNaN(Number(v)))) step=Number(base[1])-Number(base[0]);
+  fillMoveHandler=(ev)=>{
+    const td=cellFromPoint(ev.clientX,ev.clientY);
+    if(!td) return;
+    state.selection.end=td.dataset.addr;
+    renderSheet();
   };
-}
-
-function pad2(v){ return String(v).padStart(2,'0'); }
-
-function randomChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-
-function makeAssignmentCode(topic){
-  const t = (topic || 'AI').replace(/[^A-Za-z0-9]+/g,'').toUpperCase().slice(0,6) || 'AITAB';
-  const d = new Date();
-  return `${t}-${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}`;
-}
-
-function localAiGenerate(){
-  const req = buildAiRequest();
-  const topics = {
-    'formátování buněk': {texts:['Jaro','Rozvrh','Výlet'], fills:['#ffff00','#d9f99d','#bfdbfe']},
-    'rozvrh': {texts:['Matematika','Čeština','Informatika'], fills:['#fde68a','#bfdbfe','#fecaca']},
-    'známky': {texts:['1','2','Výborný'], fills:['#dcfce7','#fef3c7','#fee2e2']}
-  };
-  const normalizedTopic = (req.topic || 'formátování buněk').toLowerCase();
-  const preset = topics[normalizedTopic] || {texts:['Jaro','Tabulka','Úkol'], fills:['#ffff00','#bfdbfe','#fecaca']};
-  const cellsEasy = ['B2','C3','D4','E3','F4'];
-  const cellsMid = ['C4','D5','E4','F6','G3'];
-  const cellsHard = ['B6','C7','E5','F7','G6'];
-  const cell = req.difficulty === 'lehká' ? randomChoice(cellsEasy) : req.difficulty === 'střední' ? randomChoice(cellsMid) : randomChoice(cellsHard);
-  const text = randomChoice(preset.texts);
-  const fill = randomChoice(preset.fills);
-  const align = req.difficulty === 'lehká' ? 'left' : 'center';
-  const bold = req.difficulty === 'lehká' ? 'true' : 'true';
-  const title = `AI zadání – ${req.topic || 'tabulkový editor'} (${req.difficulty})`;
-  const code = makeAssignmentCode(req.topic);
-  const variant = 'AI-' + Math.floor(Math.random()*900 + 100);
-  const instructionParts = [
-    `Označ buňku ${cell}`,
-    `napiš text „${text}“`,
-    'nastav tučné písmo'
-  ];
-  if(req.steps >= 4) instructionParts.push(align === 'center' ? 'zarovnej text na střed' : 'zarovnej text vlevo');
-  if(req.steps >= 5 || req.difficulty !== 'lehká') instructionParts.push(`nastav výplň buňky na zvolenou barvu`);
-  instructionParts.push('a ulož práci');
-  const instructions = instructionParts.join(', ') + '.';
-  const assignment = {
-    title,
-    code,
-    variant,
-    instructions,
-    scriptUrl: state.assignment.scriptUrl || '',
-    rules: {
-      cell,
-      text,
-      align,
-      bold,
-      fill,
-      checkFill: req.steps >= 5 || req.difficulty !== 'lehká' ? 'true' : 'false'
-    }
-  };
-  applyAssignmentObject(assignment);
-  el('aiJsonBox').value = JSON.stringify(assignment, null, 2);
-  showStatus('AI návrh bez API byl vytvořen a rovnou vložen do zadání.');
-}
-
-function buildAiPrompt(){
-  const req = buildAiRequest();
-  const prompt = `Vytvoř zadání pro školní tabulkový editor a vrať pouze JSON bez vysvětlení.\n` +
-    `Požadavky: téma=${req.topic || 'tabulkový editor'}, obtížnost=${req.difficulty}, třída/ročník=${req.grade || 'neuvedeno'}, počet kroků=${req.steps}, kontext=${req.context || 'výuka informatiky'}.\n` +
-    `Použij přesně tento tvar JSON: {"title":"...","code":"...","variant":"...","instructions":"...","rules":{"cell":"C4","text":"Jaro","align":"center","bold":"true","fill":"#ffff00","checkFill":"true"}}.`;
-  el('aiJsonBox').value = prompt;
-  showStatus('Prompt pro AI byl vytvořen.');
-}
-
-function applyAssignmentObject(obj){
-  state.assignment.title = obj.title || '';
-  state.assignment.code = obj.code || '';
-  state.assignment.variant = obj.variant || '';
-  state.assignment.instructions = obj.instructions || '';
-  state.assignment.scriptUrl = obj.scriptUrl || state.assignment.scriptUrl || '';
-  state.assignment.rules = {
-    cell: obj.rules?.cell || '',
-    text: obj.rules?.text || '',
-    align: obj.rules?.align || '',
-    bold: obj.rules?.bold || '',
-    fill: obj.rules?.fill || '#ffff00',
-    checkFill: obj.rules?.checkFill || 'false'
-  };
-  if(!state.student.code) state.student.code = state.assignment.code || '';
-  fillInputsFromState();
-  refreshInfo();
-  saveAll();
-}
-
-function applyAiJson(){
-  const raw = el('aiJsonBox').value.trim();
-  if(!raw){ showStatus('Do pole Prompt / AI JSON nejprve vlož JSON.', true); return; }
-  try{
-    const obj = JSON.parse(raw);
-    applyAssignmentObject(obj.assignment ? obj.assignment : obj);
-    showStatus('AI JSON byl načten do zadání.');
-  }catch(err){
-    showStatus('AI JSON se nepodařilo načíst. Zkontroluj formát.
-
-' + err, true);
-  }
-}
-
-async function generateViaAiEndpoint(){
-  const endpoint = el('aiEndpointUrl').value.trim();
-  if(!endpoint){
-    showStatus('Nejdřív zadej AI endpoint URL, nebo použij AI návrh bez API.', true);
-    return;
-  }
-  const req = buildAiRequest();
-  try{
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(req)
+  fillUpHandler=()=>{
+    const targetCells=selectionCells();
+    targetCells.forEach((a,i)=>{
+      const c=getCell(a); c.f='';
+      c.v=step!==null?String(Number(base[0])+step*i):String(base[i%base.length]??base[0]??'');
     });
-    const text = await res.text();
-    let data;
-    try{ data = JSON.parse(text); }catch(e){ throw new Error('Endpoint nevrátil JSON.'); }
-    const assignment = data.assignment || data;
-    applyAssignmentObject(assignment);
-    el('aiJsonBox').value = JSON.stringify(assignment, null, 2);
-    showStatus('AI endpoint vygeneroval zadání a to bylo načteno do adminu.');
-  } catch(err){
-    showStatus('Generování přes AI endpoint selhalo.
-
-' + err, true);
-  }
-}
-
-function applyAssignmentFromUrl(){
-  const params = new URLSearchParams(location.search);
-  const assignment = params.get('assignment');
-  const studentMode = params.get('student');
-  if(studentMode === '1'){
-    el('adminBtn').classList.add('hidden');
-    el('adminPanel').classList.remove('open');
-  }
-  if(!assignment) return;
-  try{
-    const decoded = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(assignment)))));
-    state.assignment = decoded;
-    if(!state.student.code) state.student.code = decoded.code || '';
-    fillInputsFromState();
-    refreshInfo();
-    saveAll();
-  }catch(e){
-    console.error(e);
-    showStatus('Zadání z odkazu se nepodařilo načíst.', true);
-  }
-}
-
-function evaluateNow(){
-  readAssignmentInputs();
-  const rules = state.assignment.rules || {};
-  const detail = [];
-  let max = 0;
-  let score = 0;
-
-  if(rules.cell){
-    const cell = getCellState(rules.cell);
-    if(!cell){
-      detail.push('Cílová buňka ' + rules.cell + ' nebyla nalezena.');
-    } else {
-      if(rules.text !== ''){
-        max++;
-        if((cell.value || '') === rules.text){ score++; detail.push('Text: splněno'); }
-        else detail.push('Text: nesplněno');
-      }
-      if(rules.bold !== ''){
-        max++;
-        const req = rules.bold === 'true';
-        if(!!cell.bold === req){ score++; detail.push('Tučné písmo: splněno'); }
-        else detail.push('Tučné písmo: nesplněno');
-      }
-      if(rules.align){
-        max++;
-        if(cell.align === rules.align){ score++; detail.push('Zarovnání: splněno'); }
-        else detail.push('Zarovnání: nesplněno');
-      }
-      if(rules.checkFill === 'true'){
-        max++;
-        if(normalizeHex(cell.fillColor) === normalizeHex(rules.fill)){ score++; detail.push('Barva výplně: splněno'); }
-        else detail.push('Barva výplně: nesplněno');
-      }
-    }
-  }
-
-  const percent = max ? Math.round((score / max) * 100) : 0;
-  let rating = 'Bez hodnocení';
-  if(percent >= 85) rating = 'Výborné';
-  else if(percent >= 60) rating = 'Dobré';
-  else rating = 'Je potřeba dopracovat';
-
-  state.lastEvaluation = { score, max, percent, rating, detail, timestamp: new Date().toISOString() };
-  el('scoreText').textContent = score + ' / ' + max + ' bodů (' + percent + ' %)';
-  el('ratingText').textContent = rating;
-  el('evaluationDetail').textContent = detail.length ? detail.join('\n') : 'Zatím nebyla nastavena hodnoticí pravidla.';
-  saveAll();
-  showStatus('Vyhodnocení bylo provedeno.');
-}
-
-function renderEvaluation(){
-  if(!state.lastEvaluation){
-    el('scoreText').textContent = 'zatím nevyhodnoceno';
-    el('ratingText').textContent = '—';
-    el('evaluationDetail').textContent = 'Po kliknutí na „Vyhodnotit teď" se zobrazí rozpad bodů.';
-    return;
-  }
-  el('scoreText').textContent = state.lastEvaluation.score + ' / ' + state.lastEvaluation.max + ' bodů (' + state.lastEvaluation.percent + ' %)';
-  el('ratingText').textContent = state.lastEvaluation.rating;
-  el('evaluationDetail').textContent = state.lastEvaluation.detail.join('\n');
-}
-
-function appendResultLocal(){
-  readStudentInputs();
-  const ev = state.lastEvaluation || { score:0, max:0, percent:0 };
-  const row = {
-    name: state.student.name,
-    className: state.student.className,
-    code: state.student.code || state.assignment.code,
-    score: ev.score,
-    max: ev.max,
-    percent: ev.percent
+    document.body.classList.remove('dragging');
+    cleanupWindowHandlers();
+    pushHistory('Kopírování tažením','fill-handle'); saveState(); renderSheet(); setStatus('Rozšíření hodnot hotovo.');
   };
-  state.results.push(row);
-  saveAll();
-  renderResults();
+  window.addEventListener('mousemove',fillMoveHandler);
+  window.addEventListener('mouseup',fillUpHandler);
 }
-
-function renderResults(){
-  const tbody = el('resultsTable').querySelector('tbody');
-  tbody.innerHTML = '';
-  state.results.forEach(r => {
-    const tr = document.createElement('tr');
-    if(r.percent >= 85) tr.className = 'scoreGood';
-    else if(r.percent >= 60) tr.className = 'scoreMid';
-    else tr.className = 'scoreLow';
-    tr.innerHTML = `<td>${escapeHtml(r.name || '')}</td><td>${escapeHtml(r.className || '')}</td><td>${escapeHtml(r.code || '')}</td><td>${r.score} / ${r.max}</td><td>${r.percent} %</td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-}
-
-function buildResultPayload(){
-  readStudentInputs();
-  const ev = state.lastEvaluation || { score:0, max:0, percent:0, rating:'Bez hodnocení', detail:[] };
-  return {
-    timestamp: new Date().toISOString(),
-    studentName: state.student.name,
-    class: state.student.className,
-    school: state.student.school,
-    assignmentTitle: state.assignment.title,
-    assignmentCode: state.student.code || state.assignment.code,
-    variantCode: state.assignment.variant,
-    instructions: state.assignment.instructions,
-    score: ev.score,
-    total: ev.max,
-    percent: ev.percent,
-    rating: ev.rating,
-    evaluationDetail: ev.detail,
-    cells: state.cells
-  };
-}
-
-function exportResult(){
-  const payload = buildResultPayload();
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'vysledek-edutab.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-  showStatus('Výsledek byl exportován do JSON souboru.');
-}
-
-async function submitToSheets(){
-  readStudentInputs();
-  if(!state.student.name){ showStatus('Bez jména nelze odeslat výsledek.', true); return; }
-  if(!state.student.className){ showStatus('Bez třídy nelze odeslat výsledek.', true); return; }
-  if(!state.assignment.scriptUrl){ showStatus('V adminu není nastavená Google Apps Script URL.', true); return; }
-  if(!state.lastEvaluation) evaluateNow();
-  const payload = buildResultPayload();
-  try{
-    const response = await fetch(state.assignment.scriptUrl, {
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify(payload)
-    });
-    const text = await response.text();
-    let data = null;
-    try{ data = JSON.parse(text); }catch(e){}
-    appendResultLocal();
-    if(data && data.status === 'success'){
-      showStatus('Výsledek byl úspěšně odeslán.\nPořadové číslo odevzdání: ' + (data.submissionNumber ?? 'neuvedeno'));
-    } else {
-      showStatus('Odeslání proběhlo, ale odpověď serveru nebyla standardní.\n\n' + text, true);
-    }
-  } catch(err){
-    showStatus('Odeslání selhalo.\n\n' + err, true);
-  }
-}
-
-function bind(){
-  el('adminBtn').addEventListener('click', unlockAdminFlow);
-  el('savePinBtn').addEventListener('click', savePin);
-  el('saveAdminSettingsBtn').addEventListener('click', ()=>{ readAssignmentInputs(); refreshInfo(); saveAll(); showStatus('Nastavení učitele bylo uloženo.'); });
-  el('saveAssignmentBtn').addEventListener('click', saveAssignmentToJson);
-  el('loadAssignmentBtn').addEventListener('click', ()=> el('assignmentFileInput').click());
-  el('assignmentFileInput').addEventListener('change', e => { if(e.target.files[0]) loadAssignmentFromJson(e.target.files[0]); });
-  el('generateLinkBtn').addEventListener('click', generateLinkAndQr);
-  el('copyLinkBtn').addEventListener('click', copyStudentLink);
-  el('aiGenerateLocalBtn').addEventListener('click', localAiGenerate);
-  el('aiGenerateRemoteBtn').addEventListener('click', generateViaAiEndpoint);
-  el('aiBuildPromptBtn').addEventListener('click', buildAiPrompt);
-  el('aiApplyJsonBtn').addEventListener('click', applyAiJson);
-
-  el('saveWorkBtn').addEventListener('click', ()=>{ saveAll(); showStatus('Práce byla průběžně uložena.'); });
-  el('loadWorkBtn').addEventListener('click', ()=>{ loadAll(); fillInputsFromState(); refreshInfo(); renderTable(); updateSelectedUI(); renderEvaluation(); renderResults(); showStatus('Práce byla obnovena.'); });
-  el('exportResultBtn').addEventListener('click', exportResult);
-  el('evaluateBtn').addEventListener('click', evaluateNow);
-  el('submitBtn').addEventListener('click', submitToSheets);
-
-  el('applyCellBtn').addEventListener('click', ()=>{ applyCellValue(); saveAll(); });
-  el('cellInput').addEventListener('keydown', e => { if(e.key === 'Enter'){ applyCellValue(); saveAll(); } });
-  el('boldBtn').addEventListener('click', ()=>{ toggleStyle('bold'); saveAll(); });
-  el('italicBtn').addEventListener('click', ()=>{ toggleStyle('italic'); saveAll(); });
-  el('underlineBtn').addEventListener('click', ()=>{ toggleStyle('underline'); saveAll(); });
-  el('alignLeftBtn').addEventListener('click', ()=>{ setAlign('left'); saveAll(); });
-  el('alignCenterBtn').addEventListener('click', ()=>{ setAlign('center'); saveAll(); });
-  el('alignRightBtn').addEventListener('click', ()=>{ setAlign('right'); saveAll(); });
-  el('textColor').addEventListener('change', ()=>{ setTextColor(); saveAll(); });
-  el('fillColor').addEventListener('change', ()=>{ setFillColor(); saveAll(); });
-  el('clearCellBtn').addEventListener('click', ()=>{ clearCell(); saveAll(); });
-  el('clearFormatBtn').addEventListener('click', ()=>{ clearFormat(); saveAll(); });
-
-  ['studentName','studentClass','studentSchool','studentCode'].forEach(id => el(id).addEventListener('input', saveAll));
-}
-
-function init(){
-  loadAll();
-  bind();
-  fillInputsFromState();
-  applyAssignmentFromUrl();
-  refreshInfo();
-  renderTable();
-  updateSelectedUI();
-  renderEvaluation();
-  renderResults();
-}
-
-init();
+function applyToSelection(fn,label='Úprava výběru',mergeKey='format'){selectionCells().forEach(a=>fn(getCell(a),a)); renderSheet(); pushHistory(label,mergeKey); saveState();}
+function mergeSelection(){const rect=selectedRect(); if(rect.r1===rect.r2&&rect.c1===rect.c2) return; state.merges[key(rect.r1,rect.c1)]={rspan:rect.r2-rect.r1+1,cspan:rect.c2-rect.c1+1}; pushHistory('Sloučení buněk','merge'); saveState(); renderSheet(); setStatus('Buňky sloučeny.')}
+function unmergeSelection(){selectionCells().forEach(a=>{if(state.merges[a]) delete state.merges[a]}); pushHistory('Rozdělení buněk','merge'); saveState(); renderSheet(); setStatus('Sloučení zrušeno.')}
+function applyFormulaInput(){const val=q('#formulaInput').value; if(selectionCells().length===1){const c=getCell(state.selection.start); if(val.startsWith('=')){c.f=val;c.v=''} else {c.v=val;c.f=''}} else selectionCells().forEach(a=>{const c=getCell(a); c.v=val; c.f=''}); renderSheet(); pushHistory('Změna obsahu buňky','cell-edit'); saveState();}
+function quickAggregate(type){const vals=selectionCells().map(a=>Number(displayValue(a))).filter(v=>!Number.isNaN(v)); const out=type==='sum'?sum(vals):type==='avg'?(vals.length?sum(vals)/vals.length:0):vals.length; q('#formulaInput').value=String(out); setStatus('Výpočet připraven.')}
+function sortSelection(desc=false){const rect=selectedRect(), rows=[]; for(let r=rect.r1;r<=rect.r2;r++){rows.push([]); for(let c=rect.c1;c<=rect.c2;c++) rows[rows.length-1].push(JSON.parse(JSON.stringify(getCell(key(r,c)))))} rows.sort((A,B)=>{const av=A[0].f?evalFormula(A[0].f):A[0].v, bv=B[0].f?evalFormula(B[0].f):B[0].v; const an=isNaN(Number(av))?String(av):Number(av), bn=isNaN(Number(bv))?String(bv):Number(bv); return desc?(an<bn?1:an>bn?-1:0):(an>bn?1:an<bn?-1:0)}); rows.forEach((row,i)=>row.forEach((cell,j)=>state.cells[key(rect.r1+i,rect.c1+j)]=cell)); pushHistory('Seřazení dat','sort'); saveState(); renderSheet(); setStatus('Řazení dokončeno.')}
+function filterSelection(){const text=prompt('Zadej hledaný text nebo číslo:'); if(text===null) return; qa('#sheet tr').forEach((tr,i)=>{if(i===0){tr.style.display=''; return;} tr.style.display='';}); const rect=selectedRect(); for(let r=rect.r1;r<=rect.r2;r++){let found=false; for(let c=rect.c1;c<=rect.c2;c++){if(String(displayValue(key(r,c))).toLowerCase().includes(text.toLowerCase())) found=true;} if(!found){const rowEl=qa('#sheet tr')[r+1]; if(rowEl) rowEl.style.display='none';}} setStatus('Filtr použit.')}
+function addRecord(){state.rows+=1; state.rowHeights.push(34); q('#sheetInfo').textContent=`Rozměr: ${state.rows} × ${state.cols}`; renderSheet(); pushHistory('Přidání nového záznamu','row-add'); saveState();}
+function parseCSV(text){return text.trim().split(/\r?\n/).map(line=>{const out=[]; let cur='',q=false; for(let i=0;i<line.length;i++){const ch=line[i]; if(ch==='"'){q=!q; continue;} if(ch===','&&!q){out.push(cur); cur=''; continue;} cur+=ch;} out.push(cur); return out;})}
+function importCSV(text){const rows=parseCSV(text); state.rows=Math.max(state.rows,rows.length); state.cols=Math.max(state.cols,rows[0]?.length||state.cols); COLNAMES='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').slice(0,state.cols); while(state.colWidths.length<state.cols) state.colWidths.push(100); while(state.rowHeights.length<state.rows) state.rowHeights.push(34); rows.forEach((row,r)=>row.forEach((v,c)=>{const cell=getCell(key(r,c)); cell.v=v; cell.f=''})); renderAll(); pushHistory('Import CSV dat','import'); saveState(); setStatus('CSV načteno.')}
+function collectChartData(){const rect=selectedRect(); const labels=[],values=[]; for(let r=rect.r1;r<=rect.r2;r++){labels.push(String(displayValue(key(r,rect.c1)))); const v=Number(displayValue(key(r,rect.c1+1))); values.push(isNaN(v)?0:v)} return {labels,values}}
+function drawChart(type){const {labels,values}=collectChartData(), cv=q('#chartCanvas'), ctx=cv.getContext('2d'); ctx.clearRect(0,0,cv.width,cv.height); const W=cv.width,H=cv.height; q('#chartCaption').textContent=`Typ: ${type}. Použit první sloupec jako popisky a druhý jako hodnoty.`; if(!values.length) return; if(['bar','area','line'].includes(type)){const max=Math.max(...values,1),left=36,bottom=22,top=10,right=10; ctx.strokeStyle='#94a3b8'; ctx.beginPath(); ctx.moveTo(left,top); ctx.lineTo(left,H-bottom); ctx.lineTo(W-right,H-bottom); ctx.stroke(); const step=(W-left-right)/values.length; values.forEach((v,i)=>{const x=left+i*step+step*.15, y=H-bottom-((H-bottom-top)*(v/max)); if(type==='bar'){ctx.fillStyle='#5b6cff'; ctx.fillRect(x,y,step*.7,H-bottom-y)} else if(type==='line'){if(i===0){ctx.strokeStyle='#0ea5a6'; ctx.beginPath(); ctx.moveTo(x+step*.35,y)} else ctx.lineTo(x+step*.35,y); ctx.stroke(); ctx.fillStyle='#0ea5a6'; ctx.beginPath(); ctx.arc(x+step*.35,y,3,0,Math.PI*2); ctx.fill()} else {if(i===0){ctx.fillStyle='rgba(91,108,255,.25)'; ctx.strokeStyle='#5b6cff'; ctx.beginPath(); ctx.moveTo(x+step*.35,H-bottom); ctx.lineTo(x+step*.35,y)} else ctx.lineTo(x+step*.35,y); if(i===values.length-1){ctx.lineTo(x+step*.35,H-bottom); ctx.closePath(); ctx.fill(); ctx.stroke()}} ctx.fillStyle='#475467'; ctx.font='10px sans-serif'; ctx.fillText((labels[i]||String(i+1)).slice(0,6),x,H-6)})} else {const total=sum(values)||1; let start=-Math.PI/2; const colors=['#5b6cff','#0ea5a6','#f59e0b','#ef4444','#8b5cf6','#10b981','#f97316']; values.forEach((v,i)=>{const angle=(v/total)*Math.PI*2; ctx.beginPath(); ctx.moveTo(W/2,H/2); ctx.arc(W/2,H/2,70,start,start+angle); ctx.closePath(); ctx.fillStyle=colors[i%colors.length]; ctx.fill(); start+=angle;})}}
+function runHypothesis(){const range=q('#hypoRange').value.trim(),type=q('#hypoType').value,target=Number(q('#hypoValue').value),note=q('#hypoComment').value.trim(),vals=numericValuesFromRange(range); let metric=0,label=''; if(type==='avg_gt'){metric=vals.length?sum(vals)/vals.length:0; label='Průměr'} if(type==='sum_gt'){metric=sum(vals); label='Součet'} if(type==='max_gt'){metric=vals.length?Math.max(...vals):0; label='Maximum'} if(type==='count_eq'){metric=vals.length; label='Počet'} const ok=type==='count_eq'?metric===target:metric>target; q('#hypoResult').innerHTML=`<strong>${label}:</strong> ${metric}<br><strong>Hypotéza:</strong> ${ok?'potvrzena':'nepotvrzena'}<br>${note?'<strong>Komentář:</strong> '+note:''}`;}
+function generateTask(){const tasks=[{text:'Do vybrané oblasti vlož číselná data a vytvoř sloupcový graf.',check:()=>q('#chartCaption').textContent.includes('bar')||q('#chartCaption').textContent.includes('sloupc')},{text:'Označ rozsah s čísly a spočítej rychlou sumu tlačítkem Σ.',check:()=>q('#formulaInput').value!==''},{text:'Seřaď vybranou oblast podle prvního sloupce vzestupně.',check:()=>true},{text:'Ověř hypotézu nad rozsahem a doplň komentář.',check:()=>q('#hypoResult').textContent.trim()!==''}]; state.task=tasks[Math.floor(Math.random()*tasks.length)]; q('#taskText').textContent=state.task.text; q('#taskResult').textContent='';}
+function checkTask(){if(!state.task) return; q('#taskResult').textContent=state.task.check()?'Úloha vypadá jako splněná.':'Ještě není hotovo.'}
+function saveResult(){const name=q('#studentName').value.trim(), cls=q('#studentClass').value.trim(); if(!name||!cls){setStatus('Vyplň jméno i třídu.'); return;} let filled=0; Object.values(state.cells).forEach(c=>{if(String(c.v||c.f||'').trim()) filled++}); let score=Math.min(100,Math.round((filled/(state.rows*state.cols))*100)); if(q('#hypoResult').textContent.trim()) score=Math.min(100,score+10); if(q('#chartCaption').textContent.includes('Typ:')) score=Math.min(100,score+10); state.results.push({name,className:cls,score,status:score>=75?'dobré':score>=45?'střední':'slabé'}); renderDashboard(); pushHistory('Uložení výsledku žáka','result'); saveState(); setStatus('Výsledek uložen do dashboardu.')}
+function renderDashboard(){const body=q('#resultsBody'); body.innerHTML=''; state.results.forEach(r=>{const tr=document.createElement('tr'), badge=r.status==='dobré'?'b-good':r.status==='střední'?'b-mid':'b-bad'; tr.innerHTML=`<td>${r.name}</td><td>${r.className}</td><td>${r.score}</td><td><span class="badge ${badge}">${r.status}</span></td>`; body.appendChild(tr)})}
+function toggleAdmin(){const panel=q('#adminPanel'); if(panel.style.display==='block'){panel.style.display='none'; setStatus('Admin zavřen.'); return;} const entered=prompt('Zadej PIN učitele'); if(entered===null) return; if(entered!==String(state.admin.pin||'1234')){setStatus('Nesprávný PIN.'); return;} panel.style.display='block'; q('#teacherPin').value=state.admin.pin||'1234'; q('#scriptUrl').value=state.admin.scriptUrl||''; q('#assignmentTitle').value=state.admin.assignmentTitle||''; q('#adminInfo').textContent='Admin odemčen. Můžeš upravit nastavení a uložit je.';}
+function saveAdmin(){state.admin.pin=q('#teacherPin').value.trim()||'1234'; state.admin.scriptUrl=q('#scriptUrl').value.trim(); state.admin.assignmentTitle=q('#assignmentTitle').value.trim(); pushHistory('Změna učitelského nastavení','admin'); saveState(); q('#adminInfo').textContent='Nastavení učitele bylo uloženo.'; setStatus('Nastavení učitele bylo uloženo.');}
+async function submitToGoogle(){const name=q('#studentName').value.trim(); const cls=q('#studentClass').value.trim(); if(!name){setStatus('Bez jména nejde výsledek odeslat.'); return;} if(!cls){setStatus('Bez třídy nejde výsledek odeslat.'); return;} if(!state.admin.scriptUrl){setStatus('Nejdřív nastav Google Apps Script URL v adminu.'); return;} let filled=0; Object.values(state.cells).forEach(c=>{if(String(c.v||c.f||'').trim()) filled++}); const score=state.results.length?state.results[state.results.length-1].score:Math.min(100,Math.round((filled/(state.rows*state.cols))*100)); const payload={action:'submitResult', studentName:name, class:cls, assignmentTitle:state.admin.assignmentTitle||'Datová úloha', assignmentCode:'EDUTAB', variantCode:'A', score:score, total:100, filledCells:filled, cells:state.cells}; try{const res=await fetch(state.admin.scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}); const txt=await res.text(); let data=null; try{data=JSON.parse(txt)}catch(e){} if(data&&data.status==='success'){setStatus('Výsledek byl odeslán do Google Sheets. Pořadí: '+(data.submissionNumber??'—'));} else {setStatus('Odeslání proběhlo, ale odpověď serveru nebyla očekávaná.');}}catch(err){setStatus('Odeslání selhalo: '+err);}}
+function renderAll(){q('#sheetInfo').textContent=`Rozměr: ${state.rows} × ${state.cols}`; renderSheet(); renderDashboard();}
+q('#adminBtn').onclick=toggleAdmin; q('#submitGoogleBtn').onclick=submitToGoogle; q('#closeAdminBtn').onclick=()=>q('#adminPanel').style.display='none'; q('#saveAdminBtn').onclick=saveAdmin; q('#applyFormulaBtn').onclick=applyFormulaInput; q('#sumQuickBtn').onclick=()=>quickAggregate('sum'); q('#avgQuickBtn').onclick=()=>quickAggregate('avg'); q('#countQuickBtn').onclick=()=>quickAggregate('count'); q('#mergeBtn').onclick=mergeSelection; q('#unmergeBtn').onclick=unmergeSelection; q('#clearBtn').onclick=()=>applyToSelection(c=>{c.v=''; c.f=''},'Vymazání buněk','clear');
+q('#boldBtn').onclick=()=>applyToSelection(c=>c.style.bold=!c.style.bold,'Tučné písmo','format-bold'); q('#italicBtn').onclick=()=>applyToSelection(c=>c.style.italic=!c.style.italic,'Kurzíva','format-italic'); q('#underlineBtn').onclick=()=>applyToSelection(c=>c.style.underline=!c.style.underline,'Podtržení','format-underline'); q('#borderBtn').onclick=()=>applyToSelection(c=>c.style.border=!c.style.border,'Ohraničení buněk','format-border'); q('#leftBtn').onclick=()=>applyToSelection(c=>c.style.align='left','Zarovnání vlevo','format-align'); q('#centerBtn').onclick=()=>applyToSelection(c=>c.style.align='center','Zarovnání na střed','format-align'); q('#rightBtn').onclick=()=>applyToSelection(c=>c.style.align='right','Zarovnání vpravo','format-align'); q('#fillColor').onchange=e=>applyToSelection(c=>c.style.fill=e.target.value,'Barva výplně','format-fill'); q('#textColor').onchange=e=>applyToSelection(c=>c.style.color=e.target.value,'Barva textu','format-color'); q('#fontSize').onchange=e=>applyToSelection(c=>c.style.fontSize=Number(e.target.value),'Velikost textu','format-size');
+q('#sortAscBtn').onclick=()=>sortSelection(false); q('#sortDescBtn').onclick=()=>sortSelection(true); q('#filterBtn').onclick=filterSelection; q('#addRecordBtn').onclick=addRecord; q('#csvBtn').onclick=()=>q('#csvFile').click(); q('#csvFile').onchange=e=>{const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>importCSV(reader.result); reader.readAsText(file,'utf-8')}; qa('.chartBtn').forEach(btn=>btn.onclick=()=>drawChart(btn.dataset.chart)); q('#hypothesisBtn').onclick=()=>q('#hypoRange').focus(); q('#runHypoBtn').onclick=()=>{runHypothesis(); pushHistory('Vyhodnocení hypotézy','hypothesis'); saveState()}; q('#taskGenBtn').onclick=generateTask; q('#newTaskBtn').onclick=generateTask; q('#checkTaskBtn').onclick=checkTask; q('#saveResultBtn').onclick=saveResult; q('#pdfBtn').onclick=()=>window.print(); q('#guideBtn').onclick=()=>alert('Průvodce:\n1. Klikni nebo táhni pro výběr.\n2. Uprav vzhled vlevo.\n3. Pro výraz napiš =SUMA(B2:B6).\n4. Pro graf vyber data ve 2 sloupcích.\n5. Pro hypotézu zadej rozsah, test a komentář.'); q('#saveStateBtn').onclick=saveState; q('#loadStateBtn').onclick=loadState; q('#selectAllBtn').onclick=()=>{state.selection={start:'A1',end:key(state.rows-1,state.cols-1)}; renderSheet()}; q('#undoBtn').onclick=undo; q('#redoBtn').onclick=redo;
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault(); undo()} if(e.ctrlKey&&e.key.toLowerCase()==='y'){e.preventDefault(); redo()}});
+renderAll(); loadState(); initializeHistory(); renderAll(); renderActionLog(); refreshHistoryButtons(); if(!state.task) generateTask();
 </script>
 </body>
 </html>
